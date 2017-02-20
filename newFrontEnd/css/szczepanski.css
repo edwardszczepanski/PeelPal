@@ -4,3 +4,12 @@ h3.carousel {
   text-transform: none;
   color: white; text-shadow: black 2px 2px 8px !important;
 }
+#myProgress {
+    width: 100%;
+    background-color: grey;
+}
+#myBar {
+    width: 35%;
+    height: 30px;
+    background-color: green;
+}
