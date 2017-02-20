@@ -1,0 +1,4 @@
+er-Agent: *
+Disallow: 
+Disallow: /404.html
+Disallow: /documents/EdwardSzczepanskiRésumé.pdf
