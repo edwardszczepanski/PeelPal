@@ -105,7 +105,7 @@ print_r($today);
     <section id="portfolio" class="bg-light-gray">
 
 		<div class="row">
-			<div class="col-lg-12 text-center" style="padding-bottom:20px">
+			<div class="col-lg-12 text-center">
 				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
 			</div>
 		</div>
