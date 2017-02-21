@@ -131,7 +131,7 @@ print_r($today);
                   <a href="#quackcon" class="portfolio-link" data-toggle="modal">
                       <div class="portfolio-hover">
                           <div class="portfolio-hover-content">
-                              <i class="fa fa-plus fa-3x"></i>
+                              <i class="glyphicon glyphicon-eye-open" style="font-size:80px;"></i>
                           </div>
                       </div>
                       <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
@@ -166,7 +166,7 @@ print_r($today);
                   <a href="#quackcon" class="portfolio-link" data-toggle="modal">
                       <div class="portfolio-hover">
                           <div class="portfolio-hover-content">
-                              <i class="fa fa-plus fa-3x"></i>
+                              <i class="glyphicon glyphicon-eye-open" style="font-size:80px;"></i>
                           </div>
                       </div>
                       <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
