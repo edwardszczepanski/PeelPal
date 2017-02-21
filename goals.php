@@ -109,11 +109,11 @@ print_r($today);
 				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
 			</div>
 		</div>
-		<hr>        
+		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
 		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
         <a href="#" class="btn btn-primary">Achievements</a>
-        <P><br></p>
+        <P></p>
 		<div class="row">
 			
 			<?php
