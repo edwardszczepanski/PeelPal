@@ -1,59 +1,10 @@
-.bodycontainer { max-height: 450px; width: 100%; margin: 0; overflow-y: auto; }
-.table-scrollable { margin: 0; padding: 0; }
-body {
-    background-image: url(../assets/bk1.jpg);
+#myProgress {
+    width: 100%;
+    background-color: grey;
 }
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+#myBar {
+    width: 35%;
+    height: 30px;
+    background-color: green;
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 700px;
-	height: 360px;
-}
-
-.close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-.addContact tr{
-    height: 50px;
-}
-
-.addContact tr td input{
-    margin-left: 10px;
-    margin-right: 10px;
-}
-.delete_contact_label{
-    font-weight: bold;
-    font-style: italic;
-	text-decoration: underline;
-}
-.delete_addr_label{
-    font-weight: bold;
-    font-style: italic;
-	text-decoration: underline;
-}
