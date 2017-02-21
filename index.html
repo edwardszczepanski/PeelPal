@@ -22,7 +22,7 @@
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/szczepanski.css">
+    <link rel="stylesheet" href="css/styles.css">
 
 </head>
 
@@ -31,7 +31,6 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
@@ -59,7 +58,6 @@
         </div>
     </nav>
 
-    <!-- Portfolio Grid Section -->
     <section id="portfolio" class="bg-light-gray">
             <div class="row">
                 <div class="col-lg-12 text-center" style="padding-bottom:20px">
@@ -69,11 +67,11 @@
 
         <div class="container text-center" style="margin: 30px;">
             <div>
-                <a href="#" class="btn btn-primary">New Goal</a>
+                <a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
                 <a href="#" class="btn btn-primary">Achievements</a>
             </div>
         </div>
-        <div class="container" style="overflow-y: scroll; height:400;">
+        <div class="container" style="overflow-y: scroll; height:420px;">
 
             <div class="row">
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -87,7 +85,7 @@
                   </a>
                   <div class="portfolio-caption">
                       <h4>Stop Smoking</h4>
-                      <p class="text-muted">Last Activity: 2/12/17</p>
+                      <p class="text-muted">Last Activity 2/12/17</p>
                       <div id="myProgress">
                         <div id="myBar"></div>
                       </div>
@@ -196,6 +194,44 @@
             </div>
         </div>
     </footer>
+        <div class="portfolio-modal modal fade" id="codeday" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <!-- Project Details Go Here -->
+                            <h2>CodeDay Portland Typing Game</h2>
+                            <p class="item-intro text-muted">Increase your typing speed and learn Hello World in tons of programming languages!</p>
+
+
+
+                            <p style="text-align: left;">
+                                <br> <b>CodeDay Portland</b>
+                                <br> CodeDay Portland is an Hackathon-like event where students create games or apps for 24 hours. This particular CodeDay was held at Prolifiq Software in Beaverton, Oregon. For our game we decided to create a CodeDay-themed typing game that would teach people how to program in “Hello World” in different programming languages. The game was programmed in Java using the Slick2D graphics library. I was part of a 4 person team who worked on this project. My role was to program GUIs and work on the typing engine.
+                            </p>
+                            <ul class="list-inline">
+                                <li>Date: 2015</li>
+                            </ul>
+                            <div>
+
+                                <a target="_blank" style="font-size: 20px; margin-bottom: 10px; padding: 10px 10px;" href="https://github.com/edwardszczepanski/CodeDay-Portland-2015" class="btn btn-primary transition-buttons"><i class="fa fa-github"></i> View Github Repo</a>
+
+
+                            </div>
+                            <button type="button" class="btn btn-primary transition-buttons" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/jquery.js"></script>
 
