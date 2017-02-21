@@ -104,18 +104,13 @@ print_r($today);
 
     <section id="portfolio" class="bg-light-gray">
 
-            <div class="row">
-                <div class="col-lg-12 text-center" style="padding-bottom:20px">
-                    <h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
-                </div>
-            </div>
-
-        <div class="container text-center" style="margin: 30px;">
-            <div>
-                
-            </div>
-        </div>
-        <div class="container" style=" height:420px;">
+		<div class="row">
+			<div class="col-lg-12 text-center" style="padding-bottom:20px">
+				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
+			</div>
+		</div>
+		<hr>        
+        <div class="container" style=" ">
 		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
         <a href="#" class="btn btn-primary">Achievements</a>
         <P><br></p>
@@ -203,45 +198,7 @@ print_r($today);
             </div>
         </div>
     </footer>
-        <div class="portfolio-modal modal fade" id="codeday" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <!-- Project Details Go Here -->
-                            <h2>CodeDay Portland Typing Game</h2>
-                            <p class="item-intro text-muted">Increase your typing speed and learn Hello World in tons of programming languages!</p>
-
-
-
-                            <p style="text-align: left;">
-                                <br> <b>CodeDay Portland</b>
-                                <br> CodeDay Portland is an Hackathon-like event where students create games or apps for 24 hours. This particular CodeDay was held at Prolifiq Software in Beaverton, Oregon. For our game we decided to create a CodeDay-themed typing game that would teach people how to program in “Hello World” in different programming languages. The game was programmed in Java using the Slick2D graphics library. I was part of a 4 person team who worked on this project. My role was to program GUIs and work on the typing engine.
-                            </p>
-                            <ul class="list-inline">
-                                <li>Date: 2015</li>
-                            </ul>
-                            <div>
-
-                                <a target="_blank" style="font-size: 20px; margin-bottom: 10px; padding: 10px 10px;" href="https://github.com/edwardszczepanski/CodeDay-Portland-2015" class="btn btn-primary transition-buttons"><i class="fa fa-github"></i> View Github Repo</a>
-
-
-                            </div>
-                            <button type="button" class="btn btn-primary transition-buttons" data-dismiss="modal"><i class="fa fa-times"></i> Close Project</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+       
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
