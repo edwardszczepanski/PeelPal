@@ -1,3 +1,44 @@
+<?php 
+ include('oldScaffolding/connectionData.txt');
+ $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
+ or die('Error connecting');
+ ?>
+<?php
+		//$username=$_POST['username'];
+		//$password=$_POST['password'];
+		$username="tomz";
+		$password="123456";
+		//echo "username: ".$username."<br>";
+		//validate the username and password
+		if(isset($username) && isset($password) && !empty($username) && !empty($password))
+		{
+			$stmt = $mysqli -> prepare("SELECT * FROM user WHERE username ='$username' AND password = '$password';");
+			$stmt->execute();
+			$user_id=null;
+			$username=null;
+			$password=null;
+			$fName=null;
+			$lName=null;
+			$stmt->bind_result($user_id,$username,$password,$fName,$lName);
+			$stmt->store_result();
+			while($stmt->fetch())printf('',$user_id,$username,$password,$fName,$lName);	
+			//if user exists, redirect to index page
+			/*
+			if($stmt->num_rows==1)
+			{
+				session_start();
+				$_SESSION['auth']='true';
+				header('location:index.php');
+			}
+			else{
+				echo "<h2>Wrong username or password...</h2>";
+			}*/
+		}
+		
+			
+	?>
+	
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +68,10 @@
 </head>
 
 <body id="page-top" class="index">
-
+<?php
+$today = getdate();
+print_r($today);
+?>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -59,21 +103,35 @@
     </nav>
 
     <section id="portfolio" class="bg-light-gray">
+
             <div class="row">
                 <div class="col-lg-12 text-center" style="padding-bottom:20px">
-                    <h1 style="color: white" class="section-heading">Welcome Alice!</h1>
+                    <h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
                 </div>
             </div>
 
         <div class="container text-center" style="margin: 30px;">
             <div>
-                <a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
-                <a href="#" class="btn btn-primary">Achievements</a>
+                
             </div>
         </div>
-        <div class="container" style="overflow-y: scroll; height:420px;">
-
-            <div class="row">
+        <div class="container" style=" height:420px;">
+		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
+        <a href="#" class="btn btn-primary">Achievements</a>
+        <P><br></p>
+		<div class="row">
+			
+			<?php
+			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act, COUNT(*) AS numProg FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
+			$stmt->execute();
+			$goal_id=null;
+			$goal_name=null;
+			$goal_type=null;		
+			$last_act=null;		
+			$num_progress=null;		
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $num_progress);
+			$stmt->store_result();
+			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
                   <a href="#quackcon" class="portfolio-link" data-toggle="modal">
                       <div class="portfolio-hover">
@@ -81,105 +139,56 @@
                               <i class="fa fa-plus fa-3x"></i>
                           </div>
                       </div>
-                      <img src="img/portfolio/quackcon/ashton-eaton.jpg" class="img-responsive portfolio-radius" alt="">
+                      <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
                   </a>
                   <div class="portfolio-caption">
-                      <h4>Stop Smoking</h4>
-                      <p class="text-muted">Last Activity 2/12/17</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
-                      </div>
+                      <h4>%s</h4>
+                      <p class="text-muted">Last Activity %s</p>
+ 					  <div class="progress">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
+						  
+						  </div>
+					  </div>
                   </div>
               </div>
-                <div class="col-md-4 col-sm-6 portfolio-item">
-                    <a href="#quackhack" class="portfolio-link" data-toggle="modal">
-                        <div class="portfolio-hover">
-                            <div class="portfolio-hover-content">
-                                <i class="fa fa-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="img/portfolio/GameFullOfAnimals/AnimalsThumbnail.png" class="img-responsive portfolio-radius" alt="">
-                    </a>
-                    <div class="portfolio-caption">
-                        <h4>Get in Shape</h4>
-                        <p class="text-muted">Last Activity 2/13/17</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
+			  ',$goal_type,$goal_name,$last_act,$num_progress/30*310);
+			  ?>
+            
+			
+			<?php
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id;");
+			$stmt->execute();
+			$goal_id=null;
+			$goal_name=null;
+			$goal_type=null;		
+			$last_act=null;		
+			$targetVal=null;		
+			$tmpTotal=null;		
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $targetVal, $tmpTotal);
+			$stmt->store_result();
+			while($stmt->fetch())printf('
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                  <a href="#quackcon" class="portfolio-link" data-toggle="modal">
+                      <div class="portfolio-hover">
+                          <div class="portfolio-hover-content">
+                              <i class="fa fa-plus fa-3x"></i>
+                          </div>
                       </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 portfolio-item">
-                    <a href="#azuqua" class="portfolio-link" data-toggle="modal">
-                        <div class="portfolio-hover">
-                            <div class="portfolio-hover-content">
-                                <i class="fa fa-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="img/portfolio/Azuqua.png" class="img-responsive portfolio-radius" alt="">
-                    </a>
-                    <div class="portfolio-caption">
-                        <h4>Improve Programming</h4>
-                        <p class="text-muted">Last Activity 2/1/17</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-6 portfolio-item">
-                    <a href="#d3popvis" class="portfolio-link" data-toggle="modal">
-                        <div class="portfolio-hover">
-                            <div class="portfolio-hover-content">
-                                <i class="fa fa-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="img/portfolio/d3popvis/map-thumbnail.png" class="img-responsive portfolio-radius" alt="">
-                    </a>
-                    <div class="portfolio-caption">
-                        <h4>Eat Healthy</h4>
-                        <p class="text-muted">Last Activity 4/02/1893</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-6 portfolio-item">
-                    <a href="#perfectplaceforme" class="portfolio-link" data-toggle="modal">
-                        <div class="portfolio-hover">
-                            <div class="portfolio-hover-content">
-                                <i class="fa fa-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="img/portfolio/perfectplaceforme/chart.js.png" class="img-responsive portfolio-radius" alt="">
-                    </a>
-                    <div class="portfolio-caption">
-                        <h4>Technical Interview Preparation</h4>
-                        <p class="text-muted">Last Activity 2/30/16</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-6 portfolio-item">
-                    <a href="#enli" class="portfolio-link" data-toggle="modal">
-                        <div class="portfolio-hover">
-                            <div class="portfolio-hover-content">
-                                <i class="fa fa-plus fa-3x"></i>
-                            </div>
-                        </div>
-                        <img src="img/portfolio/Kryptiq.png" class="img-responsive portfolio-radius" alt="">
-                    </a>
-                    <div class="portfolio-caption">
-                        <h4>Sleep 8+ Hours</h4>
-                        <p class="text-muted">Last Activity 1/17/17</p>
-                      <div id="myProgress">
-                        <div id="myBar"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+                      <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
+                  </a>
+                  <div class="portfolio-caption">
+                      <h4>%s</h4>
+                      <p class="text-muted">Last Activity %s</p>
+ 					  <div class="progress">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
+						  
+						  </div>
+					  </div>
+                  </div>
+              </div>
+			  ',$goal_type,$goal_name,$last_act,$tmpTotal/$targetVal*310);
+			  ?>
+			</div>
         </div>
     </section>
 
