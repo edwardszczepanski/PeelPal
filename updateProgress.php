@@ -92,21 +92,15 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 								    
 			<?php
 			
-			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 AND goal.goal_id=$selectedGoal_id GROUP BY goal_id;");
+			$stmt = $mysqli -> prepare("SELECT t.t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 AND g.goal_id =$selectedGoal_id GROUP BY u.goal_id;");
 			$stmt->execute();
-			$goal_id=null;
-			$goal_name=null;
-			$goal_type=null;		
-			$last_act=null;		
-			$last_day=null;		
-			$first_day=null;	
-
-			$num_progress=null;		
-			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress);
+		
+			$targetVal=null;		
+			$tmpTotal=null;		
+			$stmt->bind_result( $targetVal, $tmpTotal);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
-              <div class="col-md-9 col-sm-8 portfolio-item">
-                  
+             <div class="col-md-9 col-sm-8 portfolio-item">                  
                   <div style="padding: 0px; margin: 0px; max-width: 760px;" class="portfolio-caption">
  					  <div style="height: 40px;    margin-top: 20px;" class="progress">
 						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
@@ -115,7 +109,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					  </div>
                   </div>
               </div>
-			  ',$num_progress/($last_day-$first_day)*760);		  
+			  ',$tmpTotal/$targetVal*760);
+			  
 			  ?>
 
 			
@@ -132,7 +127,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</thead>
 					<tbody>
 					<?php
-					$stmt = $mysqli -> prepare("SELECT description, g_date FROM contribution WHERE g_id=$selectedGoal_id;");
+					$stmt = $mysqli -> prepare("SELECT description, date FROM updateprog WHERE goal_id=$selectedGoal_id;");
 					$stmt->execute();
 					$tgdescription=null;
 					$tgDate=null;		

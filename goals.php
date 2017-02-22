@@ -156,7 +156,6 @@ print_r($today);
               </div>
 			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($last_day-$first_day)*310);
 			  ?>
-            	<form/>
 
 			
 			<?php
@@ -172,7 +171,7 @@ print_r($today);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
-                  <a href="#quackcon" class="portfolio-link" data-toggle="modal">
+                  <a id="bclick" href="#quackcon" class="portfolio-link" data-toggle="modal">
                       <div class="portfolio-hover">
                           <div class="portfolio-hover-content">
                               <i class="glyphicon glyphicon-eye-open" style="font-size:80px;"></i>
@@ -181,6 +180,7 @@ print_r($today);
                       <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
                   </a>
                   <div class="portfolio-caption">
+					<input style="display:none;" value="%s" type="text" name="click_goal_id" id="">
                       <h4>%s</h4>
                       <p class="text-muted">Last Activity %s</p>
  					  <div class="progress">
@@ -190,9 +190,10 @@ print_r($today);
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_name,$last_act,$tmpTotal/$targetVal*310);
+			  ',$goal_type,$goal_id, $goal_name,$last_act,$tmpTotal/$targetVal*310);
 			  ?>
-			
+			<form/>
+
 			</div>
         </div>
     </section>
@@ -209,20 +210,28 @@ print_r($today);
         </div>
     </footer>
        
-	<script type="text/JavaScript"language="javascript">
-	//function sendHForm(){
-		//var $a=$(a1).siblings().children()[0].value;
-		//alert($a);
-		$(aclick).click(function() {
-			var $selGoal_id=$(this).siblings().children();		
-			var $correctChild=$selGoal_id[0].value;
-			$(selectedGoal_id).val($correctChild);
-			document.getElementById("hForm").target='_blank';  
-			document.getElementById("hForm").action="././contributions.php";
-			document.getElementById("hForm").submit();
-		});
-	//} 
- </script>
+<script type="text/JavaScript"language="javascript">
+	$(aclick).click(function() {
+		var $selGoal_id=$(this).siblings().children();		
+		var $correctChild=$selGoal_id[0].value;
+		$(selectedGoal_id).val($correctChild);
+		document.getElementById("hForm").target='_blank';  
+		document.getElementById("hForm").action="././contributions.php";
+		document.getElementById("hForm").submit();
+	});
+ 
+</script>
+<script type="text/JavaScript"language="javascript">
+	$(bclick).click(function() {
+		var $selGoal_id=$(this).siblings().children();		
+		var $correctChild=$selGoal_id[0].value;
+		$(selectedGoal_id).val($correctChild);
+		document.getElementById("hForm").target='_blank';  
+		document.getElementById("hForm").action="././updateProgress.php";
+		document.getElementById("hForm").submit();
+	});
+ 
+</script>
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
