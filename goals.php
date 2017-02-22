@@ -120,17 +120,18 @@ print_r($today);
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
+			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
 			$goal_type=null;		
 			$last_act=null;		
 			$last_day=null;		
-			$first_day=null;	
+			$first_day=null;
+			$day_diff=null;	
 
 			$num_progress=null;		
-			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress);
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress,$day_diff);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -148,13 +149,13 @@ print_r($today);
                       <h4>%s</h4>
                       <p class="text-muted">Last Activity %s</p>
  					  <div class="progress">
-						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%s%%">
 						  
 						  </div>
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($last_day-$first_day)*310);
+			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($day_diff)*100);
 			  ?>
 
 			
@@ -184,13 +185,13 @@ print_r($today);
                       <h4>%s</h4>
                       <p class="text-muted">Last Activity %s</p>
  					  <div class="progress">
-						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%s%%">
 						  
 						  </div>
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_id, $goal_name,$last_act,$tmpTotal/$targetVal*310);
+			  ',$goal_type,$goal_id, $goal_name,$last_act,$tmpTotal/$targetVal*100);
 			  ?>
 			<form/>
 
@@ -216,7 +217,7 @@ print_r($today);
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
 		document.getElementById("hForm").target='_blank';  
-		document.getElementById("hForm").action="././contributions.php";
+		document.getElementById("hForm").action="././habitual.php";
 		document.getElementById("hForm").submit();
 	});
  
@@ -227,7 +228,7 @@ print_r($today);
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
 		document.getElementById("hForm").target='_blank';  
-		document.getElementById("hForm").action="././updateProgress.php";
+		document.getElementById("hForm").action="././quantitative.php";
 		document.getElementById("hForm").submit();
 	});
  

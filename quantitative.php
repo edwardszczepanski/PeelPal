@@ -5,7 +5,7 @@
  ?>
 
 <?php 
-echo '->'.$_POST['selectedGoal_id'].'<br>';
+//echo '->'.$_POST['selectedGoal_id'].'<br>';
 $selectedGoal_id=$_POST['selectedGoal_id'];
 
 ?>	
@@ -103,13 +103,13 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
              <div class="col-md-9 col-sm-8 portfolio-item">                  
                   <div style="padding: 0px; margin: 0px; max-width: 760px;" class="portfolio-caption">
  					  <div style="height: 40px;    margin-top: 20px;" class="progress">
-						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%spx">
+						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%s%%">
 						  
 						  </div>
 					  </div>
                   </div>
               </div>
-			  ',$tmpTotal/$targetVal*760);
+			  ',$tmpTotal/$targetVal*100);
 			  
 			  ?>
 
