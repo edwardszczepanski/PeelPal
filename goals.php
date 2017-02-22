@@ -47,6 +47,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 
     <title>Peel Pages</title>
@@ -82,7 +83,7 @@ print_r($today);
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top"></a>
+                <a class="navbar-brand page-scroll" href="././goals.php"></a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -115,20 +116,26 @@ print_r($today);
         <a href="#" class="btn btn-primary">Achievements</a>
         <P></p>
 		<div class="row">
-			
+								    
+			<form method="POST" id="hForm">
+			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act, COUNT(*) AS numProg FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
+			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
 			$goal_type=null;		
 			$last_act=null;		
+			$last_day=null;		
+			$first_day=null;	
+
 			$num_progress=null;		
-			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $num_progress);
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
-                  <a href="#quackcon" class="portfolio-link" data-toggle="modal">
+                 <!-- <a id="" href="#" class="portfolio-link" data-toggle="modal" onClick="sendHForm();">-->
+                  <a id="aclick" href="#" class="portfolio-link" data-toggle="modal" >
                       <div class="portfolio-hover">
                           <div class="portfolio-hover-content">
                               <i class="glyphicon glyphicon-eye-open" style="font-size:80px;"></i>
@@ -137,6 +144,7 @@ print_r($today);
                       <img src="img/%s.png" class="img-responsive portfolio-radius" alt="">
                   </a>
                   <div class="portfolio-caption">
+							<input style="display:none;" value="%s" type="text" name="click_goal_id" id="%s">
                       <h4>%s</h4>
                       <p class="text-muted">Last Activity %s</p>
  					  <div class="progress">
@@ -146,9 +154,10 @@ print_r($today);
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_name,$last_act,$num_progress/30*310);
+			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($last_day-$first_day)*310);
 			  ?>
-            
+            	<form/>
+
 			
 			<?php
 			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id;");
@@ -183,6 +192,7 @@ print_r($today);
               </div>
 			  ',$goal_type,$goal_name,$last_act,$tmpTotal/$targetVal*310);
 			  ?>
+			
 			</div>
         </div>
     </section>
@@ -199,6 +209,20 @@ print_r($today);
         </div>
     </footer>
        
+	<script type="text/JavaScript"language="javascript">
+	//function sendHForm(){
+		//var $a=$(a1).siblings().children()[0].value;
+		//alert($a);
+		$(aclick).click(function() {
+			var $selGoal_id=$(this).siblings().children();		
+			var $correctChild=$selGoal_id[0].value;
+			$(selectedGoal_id).val($correctChild);
+			document.getElementById("hForm").target='_blank';  
+			document.getElementById("hForm").action="././contributions.php";
+			document.getElementById("hForm").submit();
+		});
+	//} 
+ </script>
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
