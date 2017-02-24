@@ -69,10 +69,7 @@
 </head>
 
 <body id="page-top" class="index">
-<?php
-$today = getdate();
-print_r($today);
-?>
+
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
