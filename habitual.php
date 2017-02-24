@@ -129,6 +129,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					  <tr>
 						<th>Date</th>
 						<th>Description</th>
+						<th></th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -139,7 +140,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$tgDate=null;		
 					$stmt->bind_result($tgdescription, $tgDate);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" onclick="">Edit</button></td></tr>',$tgDate, $tgdescription);		  
 					?>
 					</tbody>
 				</table>

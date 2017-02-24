@@ -69,6 +69,14 @@
 </head>
 
 <body id="page-top" class="index">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -105,6 +113,7 @@
 		<div class="row">
 			<div class="col-lg-12 text-center">
 				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
+				<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">分享</a></div>
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
