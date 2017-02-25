@@ -90,7 +90,7 @@ or die ("Connection failed");
 					</thead>
 					<tbody>
 					<?php
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal;");
+						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1;");
 						$stmt -> execute();
 						$goalName = null;
 						$endDate = null;
