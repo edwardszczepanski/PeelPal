@@ -17,11 +17,12 @@
 			$user_id=null;
 			$username=null;
 			$password=null;
-			$fName=null;
-			$lName=null;
-			$stmt->bind_result($user_id,$username,$password,$fName,$lName);
+			$u_email=null;
+			$u_phonenum=null;
+
+			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
 			$stmt->store_result();
-			while($stmt->fetch())printf('',$user_id,$username,$password,$fName,$lName);	
+			while($stmt->fetch())printf('%s',$user_id);	
 			//if user exists, redirect to index page
 			/*
 			if($stmt->num_rows==1)
@@ -112,7 +113,7 @@
 
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
+				<h1 style="color: white" class="section-heading">Welcome <?php echo $username;?>!</h1>
 				<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">分享</a></div>
 			</div>
 		</div>
@@ -126,7 +127,9 @@
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,g.last_act) AS day_diff FROM goal g LEFT JOIN
+(SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id)
+AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
@@ -166,7 +169,9 @@
 
 			
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id;");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act,nihao.t_value,nihao.tmpProg FROM goal g LEFT JOIN
+(SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value AS t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id)
+AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.goal_type=1;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
