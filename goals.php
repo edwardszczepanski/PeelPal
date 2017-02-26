@@ -169,17 +169,15 @@ AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND 
 
 			
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act,nihao.t_value,nihao.tmpProg FROM goal g LEFT JOIN
-(SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value AS t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id)
-AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.goal_type=1;");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
 			$goal_type=null;		
 			$last_act=null;		
-			$targetVal=null;		
-			$tmpTotal=null;		
-			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $targetVal, $tmpTotal);
+			$tar_diff=null;		
+			//$tmpTotal=null;		
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $tar_diff);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -202,7 +200,7 @@ AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.goal_type=1;");
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_id, $goal_name,$last_act,$tmpTotal/$targetVal*100);
+			  ',$goal_type,$goal_id, $goal_name,$last_act,$tar_diff*100);
 			  ?>
 			<form/>
 
