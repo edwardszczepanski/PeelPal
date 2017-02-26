@@ -19,7 +19,7 @@ footer{
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 3; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -36,7 +36,7 @@ footer{
     padding: 20px;
     border: 1px solid #888;
     width: 700px;
-	height: 360px;
+	height: 500px;
 }
 
 .close {
@@ -51,4 +51,59 @@ footer{
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+body {
+    font-family:sans-serif;
+}
+
+#donate {
+   
+}
+
+#donate label {
+    background-color:#EFEFEF;
+    border-radius:2px;
+    border:1px solid #D0D0D0;
+    overflow:auto;
+       
+}
+
+#donate label span {
+    text-align:center;
+    display:block;
+}
+
+#donate label input {
+    position:absolute;
+    top:20px;
+	display:none;
+}
+
+#donate input:checked + span {
+    background-color:#404040;
+    color:#F7F7F7;
+}
+
+#donate .yellow {
+    background-color:#FFCC00;
+    color:#333;
+}
+
+#donate .blue {
+    background-color:#00BFFF;
+    color:#333;
+}
+
+#donate .pink {
+    background-color:#FF99FF;
+    color:#333;
+}
+
+#donate .green {
+    background-color:#A3D900;
+    color:#333;
+}
+#donate .purple {
+    background-color:#B399FF;
+    color:#333;
 }

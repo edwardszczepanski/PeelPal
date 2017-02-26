@@ -17,12 +17,11 @@
 			$user_id=null;
 			$username=null;
 			$password=null;
-			$u_email=null;
-			$u_phonenum=null;
-
-			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
+			$fName=null;
+			$lName=null;
+			$stmt->bind_result($user_id,$username,$password,$fName,$lName);
 			$stmt->store_result();
-			while($stmt->fetch())printf('%s',$user_id);	
+			while($stmt->fetch())printf('',$user_id,$username,$password,$fName,$lName);	
 			//if user exists, redirect to index page
 			/*
 			if($stmt->num_rows==1)
@@ -34,11 +33,34 @@
 			else{
 				echo "<h2>Wrong username or password...</h2>";
 			}*/
-		}
-		
-			
-	?>
+		}			
+?>
+<?php		
+	$goalTypePicked = $_POST['goalTypePicked'];			
+	$NoticeTypePicked = $_POST['NoticeTypePicked'];			
+	$goalDesccription = $_POST['goalDesccription'];			
 	
+/*
+	if($goalTypePicked==null&&$NoticeTypePicked==null&&$goalDesccription==null)
+	{
+		//header("Location: goal.php");
+		//exit();
+	}	
+*/	
+	
+	if((!empty($goalTypePicked))||(!empty($goalDesccription))){			
+		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.goal g WHERE (g.g_name ='".$goalDesccription."') AND (g.goal_type ='".$goalTypePicked."') AND (g.notification = '".$NoticeTypePicked."');");
+		$stmt->execute();
+		$countNum=null;
+		$stmt->bind_result($countNum);		
+		while($stmt->fetch())printf('',$countNum);			
+		if($countNum<1)
+		{			
+			$stmt = $mysqli -> prepare("INSERT INTO peelPal.goal (g_name,u_id, goal_type, notification,startDate) VALUES ('".$goalDesccription."','".$user_id."','".$goalTypePicked."','".$NoticeTypePicked."',CURDATE());");
+			$stmt->execute();
+		}
+	}	
+?>  	
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +92,57 @@
 </head>
 
 <body id="page-top" class="index">
+<div id="createGoalModal" class="modal" style="">
+				<!-- Modal content -->
+				<div class="modal-content">
+					<span id="" class="close closeCreateGoal">&times;</span>
+					<h3>Create New Goal</h3>
+					<form action="goals.php" method="POST" id="senddForm" style="margin-top: 2%;">	
+						<table class="addContact">
+							<tr>
+								<td>
+									<p>Is your new goal habitual or quantitative?</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div id="donate">
+										<label class="blue"><input type="radio" name="goalTypePicked" value="0" ><span>habitual</span></label><label class="green"><input type="radio" name="goalTypePicked" value="1" ><span>quantitative</span></label>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>How do you want to be notified for your goal?</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div id="donate">
+										<label class="yellow"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label><label class="pink"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label><label class="purple"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Please give a brief description of your goal</p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<textarea rows="5" cols="50" name="goalDesccription" id="" required></textarea>
+
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input class="btn btn-success" type="submit" value="Save" style="float: right;">
+								</td>
+							</tr>
+						</table>
+					</form> 
+				</div>
+			</div>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -113,13 +186,13 @@
 
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<h1 style="color: white" class="section-heading">Welcome <?php echo $username;?>!</h1>
-				<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">分享</a></div>
+				<h1 style="color: white" class="section-heading">Welcome <?php echo $fName;?>!</h1>
+				<!--<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">??</a></div>-->
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
-		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a> 
+		<button id="createGoalBtn" class="btn btn-primary portfolio-link" >New Goal</button> 
 	<a href="achievements.php" class="btn btn-primary">Achievements</a>
         <P></p>
 		<div class="row">
@@ -127,9 +200,7 @@
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,g.last_act) AS day_diff FROM goal g LEFT JOIN
-(SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id)
-AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");
+			$stmt = $mysqli -> prepare("SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
@@ -169,15 +240,15 @@ AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND 
 
 			
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act ,t.t_value, SUM(u.evaluate_num) AS tmpProg FROM goal g JOIN target t ON(g.goal_id=t.goal_id) JOIN updateprog u ON(g.goal_id=u.goal_id) WHERE g.g_state=0 GROUP BY u.goal_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
 			$goal_type=null;		
 			$last_act=null;		
-			$tar_diff=null;		
-			//$tmpTotal=null;		
-			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $tar_diff);
+			$targetVal=null;		
+			$tmpTotal=null;		
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $targetVal, $tmpTotal);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
               <div class="col-md-4 col-sm-6 portfolio-item">
@@ -200,14 +271,39 @@ AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND 
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_id, $goal_name,$last_act,$tar_diff*100);
+			  ',$goal_type,$goal_id, $goal_name,$last_act,$tmpTotal/$targetVal*100);
 			  ?>
 			<form/>
 
 			</div>
         </div>
     </section>
+			
+			
+<script type="text/JavaScript"language="javascript">
+	//create contact modal
+    // Get the modal
+    var modal = document.getElementById('createGoalModal');
+    // Get the button that opens the modal
+    var btn = document.getElementById("createGoalBtn");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("closeCreateGoal")[0];
 
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+	</script>
     <footer>
         <div class="container">
             <div class="row">
