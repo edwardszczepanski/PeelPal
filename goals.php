@@ -119,8 +119,8 @@
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
-		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a>
-        <a href="#" class="btn btn-primary">Achievements</a>
+		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a> 
+	<a href="achievements.php" class="btn btn-primary">Achievements</a>
         <P></p>
 		<div class="row">
 								    
