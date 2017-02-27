@@ -333,7 +333,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
       
 		
 		</div>
-		<button id="myBtn" type="button" class="btn btn-primary portfolio-link" >ADD UPDATE</button>
+		<button id="myBtn" type="button" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD UPDATE</button>
         <a href="#" class="btn btn-primary">MARK AS COMPLETE</a>
         <a href="#" class="btn btn-primary">ABANDON GOAL</a>
         	
@@ -365,29 +365,11 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	$(function(){
 	//create contact modal
     // Get the modal
-    var modal = document.getElementById('myModal');
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-    //var span = document.getElementById('add_close');
-    //var modal = document.getElementById('myModal');
+    
 
     // When the user clicks the button, open the modal
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
     // When the user clicks on <span> (x), close the modal
     //var modal = document.getElementById('myModal');
-	span.onclick = function() {
-        var modal = document.getElementById('myModal');
-        modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
     
     $(edit_contact).click(function() {
         var $contact_id_val = $(this).prev().val();
@@ -411,6 +393,33 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	</script>
 	
 	<script type="text/JavaScript"language="javascript">
+	function pop_Add() {
+    //create contact modal
+    // Get the modal
+    var modal = document.getElementById('myModal');
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks the button, open the modal
+    modal.style.display = "block";
+    
+    // When the user clicks on <span> (x), close the modal
+    //var modal = document.getElementById('myModal');
+	span.onclick = function() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal ) {
+            modal.style.display = "none";
+            //edit_modal.style.display = "none";
+        }
+    }
+	}
+	</script>
+	
+	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
     // Get the modal
     var edit_modal = document.getElementById('edit_myModal');
@@ -430,6 +439,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
     window.onclick = function(event) {
         if (event.target == edit_modal) {
             edit_modal.style.display = "none";
+            event.cancelBubble = true;
+
         }
     }
 	}
