@@ -35,8 +35,8 @@ footer{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 700px;
-	height: 360px;
+    width: 500px;
+	height: 550px;
 }
 
 .close {
@@ -51,4 +51,48 @@ footer{
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+body {
+    font-family:sans-serif;
+}
+
+#createTable {
+   
+}
+
+#createTable label {
+    background-color:#EFEFEF;
+    border-radius:2px;
+    border:1px solid #D0D0D0;
+    overflow:auto;
+       
+}
+
+#createTable label span {
+    text-align:center;
+    display:block;
+	padding: 6px 20px;
+
+}
+
+#createTable label input {
+    position:absolute;
+    top:20px;
+	display:none;
+}
+
+#createTable input:checked + span {
+    background-color:#404040;
+    color:#F7F7F7;
+}
+
+#createTable .buttonColor {
+    background-color:#FFCC00;
+    color:#333;    
+}
+
+.createGoal{
+	margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
