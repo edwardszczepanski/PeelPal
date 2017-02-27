@@ -20,7 +20,7 @@
 			$u_email=null;
 			$u_phonenum=null; 
  			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
-			while($stmt->fetch())printf('%s',$user_id);	
+			while($stmt->fetch())printf('',$user_id);	
 			//if user exists, redirect to index page
 			/*
 			if($stmt->num_rows==1)
@@ -38,6 +38,9 @@
 	$goalTypePicked = $_POST['goalTypePicked'];			
 	$NoticeTypePicked = $_POST['NoticeTypePicked'];			
 	$goalDesccription = $_POST['goalDesccription'];			
+	$gdInput = $_POST['gdInput'];			
+	$tnInput = $_POST['tnInput'];			
+	$sdInput = $_POST['sdInput'];			
 	
 /*
 	if($goalTypePicked==null&&$NoticeTypePicked==null&&$goalDesccription==null)
@@ -55,8 +58,21 @@
 		while($stmt->fetch())printf('',$countNum);			
 		if($countNum<1)
 		{			
-			$stmt = $mysqli -> prepare("INSERT INTO peelPal.goal (g_name,u_id, goal_type, notification,startDate) VALUES ('".$goalDesccription."','".$user_id."','".$goalTypePicked."','".$NoticeTypePicked."',CURDATE());");
-			$stmt->execute();
+			if($goalTypePicked==0){
+				$stmt = $mysqli -> prepare("INSERT INTO peelPal.goal (g_name,u_id, goal_type, notification,startDate) VALUES ('".$goalDesccription."','".$user_id."','".$goalTypePicked."','".$NoticeTypePicked."',CURDATE());");
+				$stmt->execute();
+			}else{
+				$stmt = $mysqli -> prepare("INSERT INTO peelPal.goal (g_name,u_id, goal_type, notification,startDate,endDate) VALUES ('".$goalDesccription."','".$user_id."','".$goalTypePicked."','".$NoticeTypePicked."',CURDATE(),'".$gdInput."');");
+				$stmt->execute();
+				$stmt = $mysqli -> prepare("SELECT g.goal_id FROM peelPal.goal g WHERE (g.g_name ='".$goalDesccription."') AND (g.goal_type ='".$goalTypePicked."') AND (g.notification = '".$NoticeTypePicked."') AND (g.endDate = '".$gdInput."');");
+				$stmt->execute();
+				$newGoalId=null;
+				$stmt->bind_result($newGoalId);		
+				while($stmt->fetch())printf('',$newGoalId);			
+				$stmt = $mysqli -> prepare("INSERT INTO peelPal.target (t_value,s_value, goal_id,l_value) VALUES ('".$tnInput."','".$sdInput."','".$newGoalId."','".$sdInput."');");
+				$stmt->execute();
+
+			}
 		}
 	}	
 ?>  	
@@ -97,7 +113,7 @@
 					<span id="" class="close closeCreateGoal">&times;</span>
 					<h3>Create New Goal</h3>
 					<form action="goals.php" method="POST" id="senddForm" style="margin-top: 2%;">	
-						<table class="addContact">
+						<table class="createGoal">
 							<tr>
 								<td>
 									<p>Is your new goal habitual or quantitative?</p>
@@ -105,8 +121,8 @@
 							</tr>
 							<tr>
 								<td>
-									<div id="donate">
-										<label class="blue"><input type="radio" name="goalTypePicked" value="0" ><span>habitual</span></label><label class="green"><input type="radio" name="goalTypePicked" value="1" ><span>quantitative</span></label>
+									<div id="createTable">
+										<label class="buttonColor" id="habitualLable"><input type="radio" name="goalTypePicked" value="0" ><span>habitual</span></label><label class="buttonColor" id="quantitativeLabel"><input type="radio" name="goalTypePicked" value="1" ><span>quantitative</span></label>
 									</div>
 								</td>
 							</tr>
@@ -117,8 +133,8 @@
 							</tr>
 							<tr>
 								<td>
-									<div id="donate">
-										<label class="yellow"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label><label class="pink"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label><label class="purple"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+									<div id="createTable">
+										<label class="buttonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label><label class="buttonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label><label class="buttonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
 									</div>
 								</td>
 							</tr>
@@ -129,15 +145,42 @@
 							</tr>
 							<tr>
 								<td>
-									<textarea rows="5" cols="50" name="goalDesccription" id="" required></textarea>
-
+									<textarea rows="5" cols="50" name="goalDesccription" id="goalDesccription" required></textarea>
+									
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input class="btn btn-success" type="submit" value="Save" style="float: right;">
+									<div class="row" id="sdInputDiv" style="margin-top:10px;visibility: hidden;">
+										<p class="col-md-8">What is your start number?</p>		
+										<input class="col-md-4" style="" id="sdInput" name="sdInput"></input>
+									</div>
+									
 								</td>
 							</tr>
+							
+							<tr>
+								<td>
+									<div class="row" id="tnInputDiv" style="visibility: hidden;">
+										<p class="col-md-8">What is your target number?</p>
+										<input class="col-md-4" style="" id="tnInput" name="tnInput"></input>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="row" id="gdInputDiv" style="visibility: hidden;">
+										<p class="col-md-8">What is your goal deadline?</p>		
+										<input class="col-md-4" style="" id="gdInput" name="gdInput"></input>
+									</div>
+									
+								</td>
+							</tr>
+							<tr>
+ 								<td>
+ 									<input class="btn btn-success" type="submit" value="Save" style="float: right;">
+ 								</td>
+ 							</tr>
 						</table>
 					</form> 
 				</div>
@@ -325,6 +368,27 @@
 		document.getElementById("hForm").action="././habitual.php";
 		document.getElementById("hForm").submit();
 	});
+	
+	
+	$(quantitativeLabel).click(function(){
+		if (($(gdInputDiv).css('visibility') === 'hidden')&&($(tnInputDiv).css('visibility') === 'hidden')) {
+			$(gdInputDiv).css('visibility', 'visible');
+			$(tnInputDiv).css('visibility', 'visible');
+			$(sdInputDiv).css('visibility', 'visible');
+		}
+	});
+
+
+	$(habitualLable).click(function(){
+		if (($(gdInputDiv).css('visibility') === 'visible')&&($(tnInputDiv).css('visibility') === 'visible')) {
+			$(gdInputDiv).css('visibility', 'hidden');
+			$(tnInputDiv).css('visibility', 'hidden');
+			$(sdInputDiv).css('visibility', 'hidden');
+			$(gdInput).val('');
+			$(tnInput).val('');
+			$(sdInput).val('');
+		}
+	});	
  
 </script>
 <script type="text/JavaScript"language="javascript">
