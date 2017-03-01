@@ -139,7 +139,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$tgDate=null;		
 					$stmt->bind_result($tgdescription, $tgDate);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" data-toggle="modal" data-target="#AddContModal" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" data-toggle="modal" data-target="#EditContModal" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
 					?>
 					</tbody>
 				</table>
@@ -191,14 +191,44 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				</div>
 				<div class="modal-body"  autofocus="true">
 					<table>
-						<form action="/goals.php">
+						<form action="goals.php" method="POST" id="addform">
 						<tr>
 							<td><label>Description</label></td>
 							<td><input type="text" name="description" /></td>
 						</tr>
 						<tr>
 							<td><label>Contribution Type</label></td>
-							<td><select name="c_type">
+							<td><select name="c_type" required>
+								<option value="positive">Positive</option>
+								<option value="negative">Negative</option>
+							</select></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
+				</div>
+			</div>
+	</div>
+
+
+	<!-- Edit Contribution Modal -->
+	<div id="EditContModal" class="modal" modal.style.display="block">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h3 class="modal-title">Edit Contribution</h3>
+				</div>
+				<div class="modal-body"  autofocus="true">
+					<table>
+						<form action="goals.php" method="POST" id="addform">
+						<tr>
+							<td><label>Description</label></td>
+							<td><input type="text" name="description" /></td>
+						</tr>
+						<tr>
+							<td><label>Contribution Type</label></td>
+							<td><select name="c_type" required>
 								<option value="positive">Positive</option>
 								<option value="negative">Negative</option>
 							</select></td>
