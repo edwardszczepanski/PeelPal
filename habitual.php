@@ -118,10 +118,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
               </div>
 			  ',$num_progress/($day_diff)*100);		  
 			  ?>
-
 			
 		</div>
-		
+
 		<div class="row">
 			<div class="col-md-9 col-sm-8 portfolio-item">
 				<table class="table table-hover" style="    background-color: white;">
@@ -140,7 +139,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$tgDate=null;		
 					$stmt->bind_result($tgdescription, $tgDate);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" onclick="">Edit</button></td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" data-toggle="modal" data-target="#AddContModal" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
 					?>
 					</tbody>
 				</table>
@@ -149,11 +148,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
       
 		
 		</div>
-		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">ADD CONTRIBUTION</a>
+		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal" data-target="#AddContModal">ADD CONTRIBUTION</a>
         <a href="#" class="btn btn-primary">MARK AS COMPLETE</a>
         <a href="#" class="btn btn-primary">ABANDON GOAL</a>
         </div>
     </section>
+
 
     <footer>
         <div class="container">
@@ -179,6 +179,40 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
     <script src="js/agency.js"></script>
 
     <script type="text/javascript" src="js/script.js"></script>
+
+
+
+	<!-- Add Contribution Modal -->
+	<div id="AddContModal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h3 class="modal-title">Add Contribution</h3>
+				</div>
+				<div class="modal-body"  autofocus="true">
+					<table>
+						<form action="/goals.php">
+						<tr>
+							<td><label>Description</label></td>
+							<td><input type="text" name="description" /></td>
+						</tr>
+						<tr>
+							<td><label>Contribution Type</label></td>
+							<td><select name="c_type">
+								<option value="positive">Positive</option>
+								<option value="negative">Negative</option>
+							</select></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
+				</div>
+			</div>
+	</div>
+
+
 </body>
+
 
 </html>
