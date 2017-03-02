@@ -139,7 +139,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$tgDate=null;		
 					$stmt->bind_result($tgdescription, $tgDate);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="edit_contact" type="button" class="btn btn-info" data-toggle="modal" data-target="#EditContModal" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
 					?>
 					</tbody>
 				</table>
@@ -148,7 +148,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
       
 		
 		</div>
-		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal" data-target="#AddContModal">ADD CONTRIBUTION</a>
+		<a href="#codeday" id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a href="#" class="btn btn-primary">MARK AS COMPLETE</a>
         <a href="#" class="btn btn-primary">ABANDON GOAL</a>
         </div>
@@ -240,7 +240,68 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				</div>
 			</div>
 	</div>
+ <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="js/classie.js"></script>
+    <script src="js/cbpAnimatedHeader.js"></script>
+	
+	<script type="text/JavaScript"language="javascript">
+	function pop_Add() {
+    //create add contribution modal
+    // Get the modal
+    var modal = document.getElementById('AddContModal');
+    // Get the button that opens the modal
+    var btn = document.getElementById("addModalBtn");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks the button, open the modal
+    modal.style.display = "block";
+    
+    // When the user clicks on <span> (x), close the modal
+    //var modal = document.getElementById('myModal');
+	span.onclick = function() {
+        var modal = document.getElementById('AddContModal');
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal ) {
+            modal.style.display = "none";
+            //edit_modal.style.display = "none";
+        }
+    }
+	}
+	</script>
+	
+	<script type="text/JavaScript"language="javascript">
+	function pop_Edit() {
+    // Get the modal
+    var edit_modal = document.getElementById('EditContModal');
+    // Get the button that opens the modal
+    var edit_btn = document.getElementById("editModalBtn");
+    // Get the <span> element that closes the modal
+    var edit_span = document.getElementsByClassName("close")[1];
+    // When the user clicks the button, open the modal
+    //edit_btn.onclick = function() {
+    edit_modal.style.display = "block";
+    //}
+    // When the user clicks on <span> (x), close the modal
+    edit_span.onclick = function() {
+        edit_modal.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == edit_modal) {
+            edit_modal.style.display = "none";
+            event.cancelBubble = true;
+        }
+    }
+	}
+	</script>
+    <script src="js/agency.js"></script>
+
+    <script type="text/javascript" src="js/script.js"></script>
 
 </body>
 
