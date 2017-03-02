@@ -151,9 +151,49 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</div>
 		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">ADD CONTRIBUTION</a>
         <a href="#" class="btn btn-primary">MARK AS COMPLETE</a>
-        <a href="#" class="btn btn-primary">ABANDON GOAL</a>
+        <a href="#" class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
         </div>
     </section>
+
+<!--abandon goal modal-->
+<div id="abandon_modal" class="modal">
+	<div class="modal-content">
+		<h3>Do you really want to abandon this goal?</h3>
+		<h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
+		<button type="button" id="abandon_modal_yes" class="btn btn-primary">Yes</button>
+		<button type="button" id="abandon_modal_no" class="btn btn-primary">No</button>
+	</div>
+</div>
+
+<script>
+//abandon goal modal functionality
+function abandon_goal_button_cb() {	
+	var abandon_modal = document.getElementById('abandon_modal');
+	var modal_no_btn = document.getElementById("delete_modal_no");
+	var modal_yes_btn = document.getElementById("delete_modal_yes");
+
+	abandon_modal.style.display = "block";
+	
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == abandon_modal) {
+			abandon_modal.style.display = "none";
+		}
+	}
+	
+	//when user clicks no
+	modal_no_btn.onclick = function() {
+		abandon_modal.style.display = "none";
+	}
+
+	//when user clicks yes 
+	modal_yes_btn.onclick = function() {
+		abandon_modal.style.display = "none";
+		//delete goal from db somehow
+		//redirect to goals.php somehow
+	}
+}
+</script>
 
     <footer>
         <div class="container">
