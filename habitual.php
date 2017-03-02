@@ -187,7 +187,12 @@ function abandon_goal_button_cb() {
 	//defining cb for when user clicks yes 
 	document.getElementById('abandon_modal_yes').onclick = function(event) {
 		abandon_modal.style.display = "none";
-		//delete goal from db somehow
+		<?php
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		?>
 		//redirect to goals.php somehow
 	}
 }
