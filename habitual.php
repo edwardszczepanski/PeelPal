@@ -206,7 +206,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
+					<button type="button" id="addBtn" class="btn btn-default" onclick="submitAdd()">Submit Contribution</button>
 				</div>
 			</div>
 	</div>
@@ -271,6 +271,19 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             //edit_modal.style.display = "none";
         }
     }
+    	//defining cb for when user submits new goal
+	document.getElementById('abandon_modal_no').onclick = function(event) {
+		
+		<?php
+		$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate','g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
+		$stmt->execute();
+
+		$stmt = $mysqli -> prepare("UPDATE 'peelPal'.'contribution' SET 'description'='".$description"', 'evaluate'='".$type"' WHERE con_id='".$contribution_id"';");
+		$stmt->execute();
+		?>
+		
+		abandon_modal.style.display = "none";
+	}
 	}
 	</script>
 	
@@ -290,6 +303,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
+    $(editModalBtn).click(function() {
+	var $contribution_id = $(this).prev().val();
+	});
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
