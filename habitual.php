@@ -169,8 +169,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 //abandon goal modal functionality
 function abandon_goal_button_cb() {	
 	var abandon_modal = document.getElementById('abandon_modal');
-	var modal_no_btn = document.getElementById("delete_modal_no");
-	var modal_yes_btn = document.getElementById("delete_modal_yes");
 
 	abandon_modal.style.display = "block";
 	
@@ -181,13 +179,13 @@ function abandon_goal_button_cb() {
 		}
 	}
 	
-	//when user clicks no
-	modal_no_btn.onclick = function() {
+	//defining cb for when user clicks no
+	document.getElementById('abandon_modal_no').onclick = function(event) {
 		abandon_modal.style.display = "none";
 	}
 
-	//when user clicks yes 
-	modal_yes_btn.onclick = function() {
+	//defining cb for when user clicks yes 
+	document.getElementById('abandon_modal_yes').onclick = function(event) {
 		abandon_modal.style.display = "none";
 		//delete goal from db somehow
 		//redirect to goals.php somehow
