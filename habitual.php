@@ -42,17 +42,18 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 	<!--php to act on 'add contribution'-->
 <?php		
-	$today = date(Y-m-d);			
-	$description = $_POST['description'];
-	$type = $_POST['c_type']
+	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ){
+		$today = date(Y-m-d);			
+		$description = $_POST['description'];
+		$type = $_POST['c_type']
 	
-	if((!empty($add_date))||(!empty($add_des))){			
+		if((!empty($add_date))||(!empty($add_des))){			
 		
+			$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
+			$stmt->execute();
 		
-		$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
-		$stmt->execute();
-		
-	}	
+		}
+	}
 ?> 
 
     <!-- Navigation -->
