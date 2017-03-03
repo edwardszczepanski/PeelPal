@@ -153,15 +153,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
         </div>
     </section>
+
 <?php
 	//delete the goal if it has been marked for deletion
-	$del_flag = $_POST["del_flag"];
+	$del_flag = $_POST['del_flag'];
 	if($del_flag==1){
-		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE g_id='".$selectedGoal_id."';");
 		$stmt->execute();
-		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
 		$stmt->execute();
-		header("Location: goals.php");
+		echo '<script>window.location.replace("goals.php");</script>';
 	}
 ?>
 
@@ -169,17 +170,18 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	//complete the goal if it has been marked for completion
 	$completion_flag = $_POST['completion_flag'];
 	if($completion_flag==1){
-		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
+		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."';");
 		$stmt->execute();
-		header("Location: goals.php");
+		echo '<script>window.location.replace("goals.php");</script>';
 	}
 ?>
+
 <!--mark goal as complete modal-->
 <div id="complete_modal" class="modal">
 	<div class="modal-content">
 		<h3>Do you really want to mark this goal as complete?</h3>
 		<h3><font color= "red" >This will move the goal to your achievements page, and it will no longer be viewable in your list of active goals.</font></h3>
-		<form action="././habitual.php" method="POST" id="sendForm" style="margin-top: 2%;">
+		<form action="././habitual.php" method="POST" id="completeForm" style="margin-top: 2%;">
 			<button type="button" id="complete_modal_yes" class="btn btn-primary">Yes</button>
 			<button type="button" id="complete_modal_no" class="btn btn-primary">No</button>
 			<input style="display: none;" type="text" name="completion_flag" id="completion_flag" value="0">
@@ -193,7 +195,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	<div class="modal-content">
 		<h3>Do you really want to abandon this goal?</h3>
 		<h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
-		<form action="././habitual.php" method="POST" id="sendForm" style="margin-top: 2%;">
+		<form action="././habitual.php" method="POST" id="deleteForm" style="margin-top: 2%;">
 			<button type="button" id="abandon_modal_yes" class="btn btn-primary">Yes</button>
 			<button type="button" id="abandon_modal_no" class="btn btn-primary">No</button>
 			<input style="display: none;" type="text" name="del_flag" id="del_flag" value="0">
@@ -225,7 +227,7 @@ function complete_goal_button_cb() {
 	document.getElementById('complete_modal_yes').onclick = function(event) {
 		complete_modal.style.display = "none";
 		document.getElementById("completion_flag").value="1";
-		document.getElementById("sendForm").submit();
+		document.getElementById("completeForm").submit();
 	}
 }
 
@@ -251,7 +253,7 @@ function abandon_goal_button_cb() {
 	document.getElementById('abandon_modal_yes').onclick = function(event) {
 		abandon_modal.style.display = "none";
 		document.getElementById("del_flag").value="1";
-		document.getElementById("sendForm").submit();
+		document.getElementById("deleteForm").submit();
 	}
 }
 </script>
