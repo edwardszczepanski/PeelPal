@@ -178,10 +178,52 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</div>
 		<a href="#codeday" id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a href="#" class="btn btn-primary">MARK AS COMPLETE</a>
-        <a href="#" class="btn btn-primary">ABANDON GOAL</a>
+        <a href="#" class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
         </div>
     </section>
 
+<!--abandon goal modal-->
+<div id="abandon_modal" class="modal">
+	<div class="modal-content">
+		<h3>Do you really want to abandon this goal?</h3>
+		<h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
+		<button type="button" id="abandon_modal_yes" class="btn btn-primary">Yes</button>
+		<button type="button" id="abandon_modal_no" class="btn btn-primary">No</button>
+	</div>
+</div>
+
+<script>
+//abandon goal modal functionality
+function abandon_goal_button_cb() {	
+	var abandon_modal = document.getElementById('abandon_modal');
+
+	abandon_modal.style.display = "block";
+	
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == abandon_modal) {
+			abandon_modal.style.display = "none";
+		}
+	}
+	
+	//defining cb for when user clicks no
+	document.getElementById('abandon_modal_no').onclick = function(event) {
+		abandon_modal.style.display = "none";
+	}
+
+	//defining cb for when user clicks yes 
+	document.getElementById('abandon_modal_yes').onclick = function(event) {
+		abandon_modal.style.display = "none";
+		<?php
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		?>
+		//redirect to goals.php somehow
+	}
+}
+</script>
 
     <footer>
         <div class="container">
