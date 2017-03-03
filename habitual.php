@@ -57,6 +57,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if (!$stmt->bind_result($countNum)){
 			echo "bind failed" . $stmt->error;}
 		echo $countNum == null;
+		while($stmt->fetch())printf('',$countNum);            
 		if($countNum<1){
 			echo " in the adding to table loop";
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
