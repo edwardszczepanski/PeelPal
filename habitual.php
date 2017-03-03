@@ -40,6 +40,21 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 <body id="page-top" class="index">
 
+	<!--php to act on 'add contribution'-->
+<?php		
+	$today = date(Y-m-d);			
+	$description = $_POST['description'];
+	$type = $_POST['c_type']
+	
+	if((!empty($add_date))||(!empty($add_des))){			
+		
+		
+		$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
+		$stmt->execute();
+		
+	}	
+?> 
+
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -206,7 +221,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="addBtn" class="btn btn-default" onclick="submitAdd()">Submit Contribution</button>
+					<button type="submit" class="btn btn-default">Submit Contribution</button>
 				</div>
 			</div>
 	</div>
@@ -271,19 +286,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             //edit_modal.style.display = "none";
         }
     }
-    	//defining cb for when user submits new goal
-	document.getElementById('abandon_modal_no').onclick = function(event) {
-		
-		<?php
-		$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate','g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
-		$stmt->execute();
 
-		$stmt = $mysqli -> prepare("UPDATE 'peelPal'.'contribution' SET 'description'='".$description"', 'evaluate'='".$type"' WHERE con_id='".$contribution_id"';");
-		$stmt->execute();
-		?>
-		
-		abandon_modal.style.display = "none";
-	}
 	}
 	</script>
 	
