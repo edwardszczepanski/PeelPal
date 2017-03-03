@@ -43,12 +43,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 <?php
 	$today = date(Y-m-d);
 	$description = $_POST['description'];
-	$type = $_POST['c_type']
+	$type = $_POST['c_type'];
 
 	if(!empty($type)){
 
-		/*$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
-		$stmt->execute();*/
+		$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
+		$stmt->execute();
 	}
 ?>
 
@@ -201,25 +201,28 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h3 class="modal-title">Add Contribution</h3>
 				</div>
+				<form action="habitual.php" method="POST" id="addform">
 				<div class="modal-body"  autofocus="true">
 					<table>
-						<form action="goals.php" method="POST" id="addform">
 						<tr>
 							<td><label>Description</label></td>
 							<td><input type="text" name="description" /></td>
 						</tr>
 						<tr>
 							<td><label>Contribution Type</label></td>
-							<td><select name="c_type" required>
+							<td><select name="c_type" >
 								<option value="positive">Positive</option>
 								<option value="negative">Negative</option>
 							</select></td>
 						</tr>
 					</table>
+						<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
+					
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
 				</div>
+				</form>
 			</div>
 	</div>
 
