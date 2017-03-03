@@ -155,24 +155,24 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
     </section>
 <?php
 	//delete the goal if it has been marked for deletion
-//	$del_flag = $_POST["del_flag"];
-//	if($del_flag==1){
-//		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
-//		$stmt->execute();
-//		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
-//		$stmt->execute();
-//	//	header("Location: goals.php");
-//	}
+	$del_flag = $_POST["del_flag"];
+	if($del_flag==1){
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		$stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		header("Location: goals.php");
+	}
 ?>
 
 <?php
 	//complete the goal if it has been marked for completion
-//	$completion_flag = $_POST['completion_flag'];
-//	if($completion_flag==1){
-//		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
-//		$stmt->execute();
-//	//	header("Location: goals.php");
-//	}
+	$completion_flag = $_POST['completion_flag'];
+	if($completion_flag==1){
+		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
+		$stmt->execute();
+		header("Location: goals.php");
+	}
 ?>
 <!--mark goal as complete modal-->
 <div id="complete_modal" class="modal">
@@ -183,6 +183,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			<button type="button" id="complete_modal_yes" class="btn btn-primary">Yes</button>
 			<button type="button" id="complete_modal_no" class="btn btn-primary">No</button>
 			<input style="display: none;" type="text" name="completion_flag" id="completion_flag" value="0">
+			<input style="display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
 		</form>
 	</div>
 </div>
@@ -196,6 +197,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			<button type="button" id="abandon_modal_yes" class="btn btn-primary">Yes</button>
 			<button type="button" id="abandon_modal_no" class="btn btn-primary">No</button>
 			<input style="display: none;" type="text" name="del_flag" id="del_flag" value="0">
+			<input style="display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
 		</form>
 	</div>
 </div>
