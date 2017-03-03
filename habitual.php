@@ -231,7 +231,6 @@ function abandon_goal_button_cb() {
 }
 </script>
 
-
 <?php
 	//delete the goal if it has been marked for deletion
 	$del_flag = $_POST['del_flag'];
@@ -249,7 +248,6 @@ function abandon_goal_button_cb() {
 	if($completion_flag=="1"){
 		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
 		$stmt->execute();
-		
 	}
 ?>
 

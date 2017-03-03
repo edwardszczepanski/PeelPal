@@ -339,6 +339,17 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
         </div>
     </section>
 
+<!--mark goal as complete modal-->
+<div id="complete_modal" class="modal">
+        <div class="modal-content">
+                <h3>Do you really want to mark this goal as complete?</h3>
+                <h3><font color= "red" >This will move the goal to your achievements page, and it will no longer be viewable in your list of active goals.</font></h3>
+                <button type="button" id="complete_modal_yes" class="btn btn-primary">Yes</button>
+                <button type="button" id="complete_modal_no" class="btn btn-primary">No</button>
+                <input style="display: none;" type="text" name="completion_flag" id="completion_flag">
+        </div>
+</div>
+
 <!--abandon goal modal-->
 <div id="abandon_modal" class="modal">
         <div class="modal-content">
@@ -346,10 +357,37 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                 <h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
                 <button type="button" id="abandon_modal_yes" class="btn btn-primary">Yes</button>
                 <button type="button" id="abandon_modal_no" class="btn btn-primary">No</button>
+		<input style="display: none;" type="text" name="del_flag" id="del_flag">
         </div>
 </div>
 
 <script>
+//complete goal modal functionality
+function complete_goal_button_cb() {    
+        var complete_modal = document.getElementById('complete_modal');
+
+        complete_modal.style.display = "block";
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+                if (event.target == complete_modal) {
+                        complete_modal.style.display = "none";
+                }
+        }
+        
+        //defining cb for when user clicks no
+        document.getElementById('complete_modal_no').onclick = function(event) {
+                complete_modal.style.display = "none";
+        }
+
+        //defining cb for when user clicks yes 
+        document.getElementById('complete_modal_yes').onclick = function(event) {
+                complete_modal.style.display = "none";
+                document.getElementById("completion_flag").value="1";
+                //redirect to goals.php somehow
+        }
+}
+
 //abandon goal modal functionality
 function abandon_goal_button_cb() {     
         var abandon_modal = document.getElementById('abandon_modal');
@@ -371,18 +409,33 @@ function abandon_goal_button_cb() {
         //defining cb for when user clicks yes 
         document.getElementById('abandon_modal_yes').onclick = function(event) {
                 abandon_modal.style.display = "none";
-                <?php
-                $stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
-                $stmt->execute();
-                $stmt = $mysqli -> prepare("DELETE FROM peelPal.updateprog WHERE goal_id='".$selectedGoal_id."'");
-                $stmt->execute();
-                $stmt = $mysqli -> prepare("DELETE FROM peelPal.target WHERE goal_id='".$selectedGoal_id."'");
-                $stmt->execute();
-                ?>
+		document.getElementById("del_flag").value="1";
                 //redirect to goals.php somehow
         }
 }
 </script>
+
+<?php
+        //delete the goal if it has been marked for deletion
+        $del_flag = $_POST['del_flag'];
+        if($del_flag=="1"){
+                $stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."'");
+                $stmt->execute();
+                $stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE goal_id='".$selectedGoal_id."'");
+                $stmt->execute();
+                $stmt = $mysqli -> prepare("DELETE FROM peelPal.target WHERE goal_id='".$selectedGoal_id."'");
+                $stmt->execute();
+        }
+?>
+
+<?php
+        //complete the goal if it has been marked for completion
+        $completion_flag = $_POST['completion_flag'];
+        if($completion_flag=="1"){
+                $stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
+                $stmt->execute();
+        }
+?>
 
     <footer>
         <div class="container">
