@@ -41,17 +41,21 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 <body id="page-top" class="index">
 
 <?php
-	$today = date(Y-m-d);
+	$today = date("Y-m-d");
 	$description = $_POST['description'];
 	$type = $_POST['c_type'];
-	echo 'Well at least it did something';
+	echo 'Well at least it did something ';
+	echo "$type";
+	echo "$selectedGoal_id";
+	echo !empty($type);
 	if(!empty($type)){
 
-		$stmt = $mysqli -> prepare('SELECT COUNT(*) FROM peelPal.contribution WHERE g_date=".$today.";');
+		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM 'peelPal'.'contribution' WHERE 'g_date'='".$today."' and 'g_id'='".$selectedGoal_id."';");
 		$stmt->execute();
-		$countNum=null;
+		$countNum = null;
 		$stmt->bind_result($countNum);
-		echo 'Well at least it did something';
+		
+		echo "$countNum";
 		if($countNum<1){
 			$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
 			$stmt->execute();}
