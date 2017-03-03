@@ -50,6 +50,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		echo "I went into the sql execution loop ";
 
 		if (!($stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.contribution WHERE g_date='".$today."' and g_id='".$selectedGoal_id."';"))){
+			echo " prepare failed";}
 		if (!$stmt->execute()){
 			echo "execute failed" . $stmt->error;}
 		$countNum = null;
