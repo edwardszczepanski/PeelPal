@@ -249,6 +249,7 @@ function abandon_goal_button_cb() {
 	if($completion_flag=="1"){
 		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."'");
 		$stmt->execute();
+		
 	}
 ?>
 
