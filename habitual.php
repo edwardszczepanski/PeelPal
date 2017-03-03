@@ -44,11 +44,17 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	$today = date(Y-m-d);
 	$description = $_POST['description'];
 	$type = $_POST['c_type'];
-
+	echo 'Well at least it did something';
 	if(!empty($type)){
 
-		$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
+		$stmt = $mysqli -> prepare('SELECT COUNT(*) FROM peelPal.contribution WHERE g_date=".$today.";');
 		$stmt->execute();
+		$countNum=null;
+		$stmt->bind_result($countNum);
+		echo 'Well at least it did something';
+		if($countNum<1){
+			$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
+			$stmt->execute();}
 	}
 ?>
 
@@ -201,8 +207,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h3 class="modal-title">Add Contribution</h3>
 				</div>
-				<form action="habitual.php" method="POST" id="addform">
 				<div class="modal-body"  autofocus="true">
+				<form action="habitual.php" method="POST" id="addform">
 					<table>
 						<tr>
 							<td><label>Description</label></td>
@@ -215,14 +221,13 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 								<option value="negative">Negative</option>
 							</select></td>
 						</tr>
+						<tr>
+							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
+						</tr>
 					</table>
-						<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
-					
-				</div>
-				<div class="modal-footer">
 					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
-				</div>
 				</form>
+				</div>
 			</div>
 	</div>
 
