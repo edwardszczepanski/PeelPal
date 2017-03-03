@@ -45,20 +45,26 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	$description = $_POST['description'];
 	$type = $_POST['c_type'];
 	echo 'Well at least it did something ';
-	echo "$type";
-	echo "$selectedGoal_id";
 	echo !empty($type);
 	if(!empty($type)){
+		echo "I went into the sql execution loop ";
 
-		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM 'peelPal'.'contribution' WHERE 'g_date'='".$today."' and 'g_id'='".$selectedGoal_id."';");
-		$stmt->execute();
+		if (!($stmt = $mysqli -> prepare('SELECT COUNT(*) FROM peelPal.contribution WHERE g_date=".$today." and g_id=".$selectedGoal_id.";'))){
+			echo "prepare failed" . $mysqli->error;}
+		if (!$stmt->execute()){
+			echo "execute failed" . $stmt->error;}
 		$countNum = null;
-		$stmt->bind_result($countNum);
-		
-		echo "$countNum";
+		if (!$stmt->bind_result($countNum)){
+			echo "bind failed" . $stmt->error;}
+		echo $countNum == null;
 		if($countNum<1){
-			$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
-			$stmt->execute();}
+			echo " in the adding to table loop";
+			if (!($stmt = $mysqli->prepare('INSERT INTO peelPal.contribution (g_id, description, evaluate, g_date) VALUES (".$selectedGoal_id.", ".$description.", ".$type.", ".$today.");'))){
+				echo "add to table prep failed" . $mysqli->errno ." " . $mysqli->error;}
+			$stmt->execute();
+			echo " should have added to table";
+/*			header("Location: habitual.php");
+*/			}
 	}
 ?>
 
@@ -212,7 +218,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<h3 class="modal-title">Add Contribution</h3>
 				</div>
 				<div class="modal-body"  autofocus="true">
-				<form action="habitual.php" method="POST" id="addform">
+				<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
 					<table>
 						<tr>
 							<td><label>Description</label></td>
