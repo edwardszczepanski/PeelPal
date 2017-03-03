@@ -40,21 +40,17 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 <body id="page-top" class="index">
 
-	<!--php to act on 'add contribution'-->
-<?php		
-	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ){
-		$today = date(Y-m-d);			
-		$description = $_POST['description'];
-		$type = $_POST['c_type']
-	
-		if((!empty($add_date))||(!empty($add_des))){			
-		
-			$stmt = $mysqli -> prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description"', '".$type"', '".$today"');");
-			$stmt->execute();
-		
-		}
+<?php
+	$today = date(Y-m-d);
+	$description = $_POST['description'];
+	$type = $_POST['c_type']
+
+	if(!empty($type)){
+
+		/*$stmt = $mysqli->prepare("INSERT INTO 'peelPal'.'contribution' ('g_id', 'description', 'evaluate', 'g_date') VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');");
+		$stmt->execute();*/
 	}
-?> 
+?>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -222,7 +218,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-default">Submit Contribution</button>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
 				</div>
 			</div>
 	</div>
