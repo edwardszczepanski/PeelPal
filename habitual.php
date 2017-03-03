@@ -59,7 +59,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		echo $countNum == null;
 		if($countNum<1){
 			echo " in the adding to table loop";
-			if (!($stmt = $mysqli->prepare('INSERT INTO peelPal.contribution (g_id, description, evaluate, g_date) VALUES (".$selectedGoal_id.", ".$description.", ".$type.", ".$today.");'))){
+			if (!($stmt = $mysqli -> prepare("INSERT INTO peelPal.contribution (g_id, description, evaluate, g_date) VALUES ('".$selectedGoal_id."', '".$description."', '".$type."', '".$today."');"))){
 				echo "add to table prep failed" . $mysqli->errno ." " . $mysqli->error;}
 			$stmt->execute();
 			echo " should have added to table";
