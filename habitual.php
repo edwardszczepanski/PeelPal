@@ -414,14 +414,32 @@ function abandon_goal_button_cb() {
 	</script>
 
 	<script type="text/JavaScript"language="javascript">
-
 	$(function(){
-		$(editModalBtn).click(function() {
-			var $contrib_id = $(this).prev().val();
-			$(edit_cont_id).val($contrib_id);
-		});
+	//create contact modal
+    // Get the modal
+    
+    // When the user clicks the button, open the modal
+    // When the user clicks on <span> (x), close the modal
+    //var modal = document.getElementById('myModal');
+    
+    $(edit_contact).click(function() {
+        var $contact_id_val = $(this).prev().val();
+        //alert($contact_id_val);
+        $(edit_contact_Id).val($contact_id_val);
+        var $da = $(this).parent().parent().children()[0];
+        var $de = $(this).parent().parent().children()[1];
+        var $da1 = $da.children;
+        var $da11 = $da1[0].innerHTML;
+        var $de1 = $de.children;
+        var $de11 = $de1[0].innerHTML;
+        $(edit_da).val($da11);
+        $(edit_de).val($de11);
+        var $edit_eve = $(this).prev().prev().val();
+        $(edit_num).val($edit_eve);
+        
+    });
+    
 	});
-
 	</script>
 	
 	<script type="text/JavaScript"language="javascript">
