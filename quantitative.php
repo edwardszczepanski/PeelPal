@@ -133,7 +133,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<span id="add_close" class="close">&times;</span>
 					<h3>Add Update</h3>
 					<form action="quantitative.php" method="POST" id="senddForm" style="margin-top: 2%;">	
-						<table class="addContact">
+						<table class="addUpdate">
 							<tr>
 								<td>
 									<p>Date:	</p>
@@ -162,11 +162,11 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 							<tr>
 								
 								<td>
-									<input style=""type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">								
+									<input style="display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">								
 								</td>
 								<td>
-									<input class="btn btn-success" type="submit" value="Save" style="float: right;" >
-									<input class="btn btn-success" type="reset" value="Erase" style="float: right; margin-right: 20px;">		
+									<input class="btn btn-success" type="button" value="Save" style="float: right;" onclick="checkDate()">
+											
 								</td>
 							</tr>
 						</table>
@@ -178,7 +178,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             <span class="close">&times;</span>
             <h3>Please fill information</h3>
             <form action="quantitative.php" method="POST" id="sendForm" style="margin-top: 2%;">	
-            	<table class="addContact">
+            	<table class="editUpdate">
 					<tr>
 						<td>
 							<p>Date:	</p>
@@ -206,12 +206,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<tr>               
 									
 						<td>
-							<input style="width: 50px; "type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
-							<input style="width: 50px; "type="text" name="contact_Id" id="edit_contact_Id">		
+							<input style="width: 50px; display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
+							<input style="width: 50px; display: none;" type="text" name="contact_Id" id="edit_contact_Id">		
 						</td>					
 						<td>
 							<input class="btn btn-success" type="submit" value="Save" style="float: right;">
-							<input class="btn btn-success" type="reset" value="Erase" style="float: right; margin-right: 20px;">		
+									
 						</td>
 					</tr>				
                 </table>
@@ -297,7 +297,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		
 		<div class="row">
 			<div class="col-md-9 col-sm-8 portfolio-item">
-				<table class="table table-hover" style="    background-color: white;">
+				<table id="getDate" class="table table-hover" style="    background-color: white;">
 					<thead>
 					  <tr>
 						<th>Date</th>
@@ -320,8 +320,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					<tr>
 					<td><p>%s</p></td>
 					<td><p>%s</p></td>
-					<td><input style=";" type="text" name="%s" style="width:50px;" value="%s" >
-						<input style=";" type="text" name="%s" style="width:50px;" value="%s" >
+					<td><input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
+						<input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 					<button id="edit_contact" type="button" class="btn btn-info" onclick="pop_Edit()">Edit</button></td>
 					
 					</tr>',$tgDate, $tgdescription,$tgNum,$tgNum,$upId,$upId);		  
@@ -393,6 +393,45 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
         </div>
 </div>
 
+<script type="text/JavaScript"language="javascript">
+	function checkDate() {
+		var getb=document.getElementById("add_date").value;
+		var geta=document.getElementById("add_des").value;
+		var getd=document.getElementById("add_num").value;
+
+		if(getb.length != 10){
+			alert("Please type date like this format: YYYY-MM-DD!");
+		}
+		if(geta == ''){
+			alert("Please type a description!");
+		}
+		if((isNaN(getd)) || getd == ''){
+			alert("Please type a number!");
+		}
+		if(getb.length == 10 && geta !='' && getd !=''){
+			var getc = '<p>' + getb + '</p>';
+			var tb=document.getElementById("getDate");
+			var flag = 0;
+			for(var k=0;k<tb.rows.length;k++){
+			var td=document.getElementById("getDate").rows[k].cells[0];
+			if(getc == td.innerHTML){
+			flag = 1;
+			}
+
+
+			}
+			if(flag == 1){
+			alert("You already update for this day!!");
+			// Click no would not save the information
+			}
+			if(flag == 0){
+			document.getElementById("senddForm").submit();
+			}
+		}
+
+    	
+	}
+</script>
 <script>
 //complete goal modal functionality
 function complete_goal_button_cb() {    
