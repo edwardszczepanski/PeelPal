@@ -61,9 +61,13 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if($countNum<1){
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
-/*			header("Location: habitual.php");
-*/			}
+			}
 	}
+
+	/*If editing a contribution: */
+	$change_on_date = $_POST['date_of_original'];
+	$new_description = $_POST['edit_description'];
+	$new_type = $_POST['edit_c_type'];
 ?>
 
     <!-- Navigation -->
@@ -366,6 +370,7 @@ function abandon_goal_button_cb() {
 						</tr>
 						<tr>
 							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
+							<input type="text" name="contribution_id" id="edit_cont_id" style="" />
 						</tr>
 					</table>
 					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
@@ -407,6 +412,17 @@ function abandon_goal_button_cb() {
 
 	}
 	</script>
+
+	<script type="text/JavaScript"language="javascript">
+
+	$(function(){
+		$(editModalBtn).click(function() {
+			var $contrib_id = $(this).prev().val();
+			$(edit_cont_id).val($contrib_id);
+		});
+	});
+
+	</script>
 	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
@@ -424,9 +440,6 @@ function abandon_goal_button_cb() {
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
-    $(editModalBtn).click(function() {
-	var $contribution_id = $(this).prev().val();
-	});
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
