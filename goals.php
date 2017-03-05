@@ -37,6 +37,9 @@
 		
 			
 	?>
+<?php
+//	$userID=$_POST['user_id'];
+?>
 	
 
 <!DOCTYPE html>
@@ -119,7 +122,15 @@
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
 		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a> 
-	<a href="achievements.php" class="btn btn-primary">Achievements</a>
+		 
+	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
+	
+	<form id="achievementForm" method = "POST" id="sendForm">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
+	</form>
+	
+
         <P></p>
 		<div class="row">
 								    
@@ -239,6 +250,15 @@
 	});
  
 </script>
+<script type="text/JavaScript"language="javascript">
+        $(achievementBtn).click(function() {
+                document.getElementById("achievementForm").target='_blank';  
+                document.getElementById("achievementForm").action="././achievements.php";
+                document.getElementById("achievementForm").submit();
+        });
+ 
+</script>
+
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
