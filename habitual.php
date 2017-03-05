@@ -61,6 +61,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if($countNum<1){
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
+			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+			$stmt ->execute();
 			}
 	}
 
@@ -68,6 +70,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	$change_on_date = $_POST['date_of_original'];
 	$new_description = $_POST['edit_description'];
 	$new_type = $_POST['edit_c_type'];
+
+	if(!empty($new_type)){
+		$stmt = $mysqli -> prepare("SELECT con_id FROM peelPal.contribution WHERE g_id='".$selectedGoal_id."' and g_date='".$change_on_date."';");
+		$stmt->execute();
+		$con_id = null;
+		$stmt -> bind_result($con_id);
+		while($stmt->fetch())printf('',$con_id);
+/*		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='"$.new_description."', evaluate='".$new_type."' WHERE con_id='".$con_id."';");
+		$stmt->execute();
+*/		}
 ?>
 
     <!-- Navigation -->
@@ -169,7 +181,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$tgDate=null;		
 					$stmt->bind_result($tgdescription, $tgDate);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()" value=%s >Edit</button></td></tr>',$tgDate, $tgdescription, $tgDate);		  
 					?>
 					</tbody>
 				</table>
@@ -356,21 +368,22 @@ function abandon_goal_button_cb() {
 				</div>
 				<div class="modal-body"  autofocus="true">
 				<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
+					<label id="test_label" />
 					<table>
 						<tr>
 							<td><label>Description</label></td>
-							<td><input type="text" name="edit_description" /></td>
+							<td><input type="text" name="edit_description" id="edit_desc"/></td>
 						</tr>
 						<tr>
 							<td><label>Contribution Type</label></td>
-							<td><select name="edit_c_type" >
+							<td><select id="edit_type" name="edit_c_type" >
 								<option value="positive">Positive</option>
 								<option value="negative">Negative</option>
 							</select></td>
 						</tr>
 						<tr>
 							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
-							<input type="text" name="contribution_id" id="edit_cont_id" style="" />
+							<input type="text" name="date_of_original" id="edit_date"  />
 						</tr>
 					</table>
 					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
@@ -413,35 +426,27 @@ function abandon_goal_button_cb() {
 	}
 	</script>
 
-	<script type="text/JavaScript"language="javascript">
+/*	<script type="text/JavaScript"language="javascript">
 	$(function(){
-	//create contact modal
-    // Get the modal
     
-    // When the user clicks the button, open the modal
-    // When the user clicks on <span> (x), close the modal
-    //var modal = document.getElementById('myModal');
-    
-    $(edit_contact).click(function() {
-        var $contact_id_val = $(this).prev().val();
-        //alert($contact_id_val);
-        $(edit_contact_Id).val($contact_id_val);
-        var $da = $(this).parent().parent().children()[0];
-        var $de = $(this).parent().parent().children()[1];
-        var $da1 = $da.children;
-        var $da11 = $da1[0].innerHTML;
-        var $de1 = $de.children;
-        var $de11 = $de1[0].innerHTML;
-        $(edit_da).val($da11);
-        $(edit_de).val($de11);
-        var $edit_eve = $(this).prev().prev().val();
-        $(edit_num).val($edit_eve);
+		$(editModalBtn).click(function() {
+        		var $contrib_date = 'something'; document.getElementById(editModalBtn).value;
+		        $(edit_cont_id).value = $contrib_date;
+		        var $da = $(this).parent().children()[0];
+        		var $de = $(this).parent().parent().children()[1];
+        		var $da1 = $da.children;
+        		var $da11 = $da1[0].innerHTML;
+        		var $de1 = $de.children;
+        		var $de11 = $de1[0].innerHTML;
+        		$(edit_date).val($da11);
+        		$(edit_desc).val($de11);
+        		var $edit_eve = $(this).prev().prev().val();
         
-    });
+    		});
     
 	});
 	</script>
-	
+*/	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
     // Get the modal
@@ -458,6 +463,14 @@ function abandon_goal_button_cb() {
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
+    edit_btn.onclick = function(){
+	var $edit_date = "something"; /*document.getElementById("edit_date");*/
+        var $da = $(this).parent().children()[0];
+        var $edit_date_val = /*document.getElementById(editModalBtn).value;*/
+        $edit_date.value = $edit_date_val;
+	var tst_lbl = document.getElementById("test_label");
+	$(tst_lbl).val("this is a test");
+	}
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
