@@ -63,6 +63,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt->execute();
 			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
 			$stmt ->execute();
+			if($type == 'positive'){
+				$stmt = $mysqli -> prepare("SELECT progress FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				$progress = null;
+				$stmt->bind_result($progress);
+				while($stmt->fetch())printf('',$progress);
+				$progress = $progress + 1;
+				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				}
 			}
 	}
 
@@ -77,9 +87,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		$con_id = null;
 		$stmt -> bind_result($con_id);
 		while($stmt->fetch())printf('',$con_id);
-/*		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='"$.new_description."', evaluate='".$new_type."' WHERE con_id='".$con_id."';");
+		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='".$new_description."', evaluate='".$new_type."' WHERE con_id='".$con_id."';");
 		$stmt->execute();
-*/		}
+
+		}
 ?>
 
     <!-- Navigation -->
