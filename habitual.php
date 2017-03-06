@@ -7,7 +7,6 @@
 <?php 
 //echo '->'.$_POST['selectedGoal_id'].'<br>';
 $selectedGoal_id=$_POST['selectedGoal_id'];
-
 ?>	
 
 <!DOCTYPE html>
@@ -271,7 +270,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</form>
 	</div>
 </div>
-	
 <!--abandon goal modal-->
 <div id="abandon_modal" class="modal">
 	<div class="modal-content">
@@ -303,7 +301,6 @@ function complete_goal_button_cb() {
 	document.getElementById('complete_modal_no').onclick = function(event) {
 		complete_modal.style.display = "none";
 	}
-	
 	//defining cb for when user clicks yes 
 	document.getElementById('complete_modal_yes').onclick = function(event) {
 		complete_modal.style.display = "none";
@@ -311,14 +308,13 @@ function complete_goal_button_cb() {
 		document.getElementById("completeForm").submit();
 	}
 }
-	
 
 //abandon goal modal functionality
 function abandon_goal_button_cb() {	
 	var abandon_modal = document.getElementById('abandon_modal');
 
 	abandon_modal.style.display = "block";
-	
+		
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
 		if (event.target == abandon_modal) {
@@ -339,6 +335,7 @@ function abandon_goal_button_cb() {
 	}
 }
 </script>
+
 
     <footer>
         <div class="container">
