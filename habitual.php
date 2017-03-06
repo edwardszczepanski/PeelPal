@@ -40,13 +40,13 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 <body id="page-top" class="index">
 
 <?php
+	/*If adding contribution: */
 	$today = date("Y-m-d");
-	$description = $_POST['description'];
-	$type = $_POST['c_type'];
-	echo 'Well at least it did something ';
-	echo !empty($type);
+	$description = $_POST['add_description'];
+	$type = $_POST['add_c_type'];
+
 	if(!empty($type)){
-		echo "I went into the sql execution loop ";
+
 
 		if (!($stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.contribution WHERE g_date='".$today."' and g_id='".$selectedGoal_id."';"))){
 			echo " prepare failed";}
@@ -55,16 +55,67 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		$countNum = null;
 		if (!$stmt->bind_result($countNum)){
 			echo "bind failed" . $stmt->error;}
-		echo $countNum == null;
+
 		while($stmt->fetch())printf('',$countNum);            
 		if($countNum<1){
-			echo " in the adding to table loop";
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
-			echo " should have added to table";
-/*			header("Location: habitual.php");
-*/			}
+			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+			$stmt ->execute();
+			if($type == 'positive'){
+				/*If type is positive, increment progress value by 1*/
+				$stmt = $mysqli -> prepare("SELECT progress FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				$progress = null;
+				$stmt->bind_result($progress);
+				while($stmt->fetch())printf('',$progress);
+				$progress = $progress + 1;
+				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				}
+			}
 	}
+
+	/*If editing a contribution: */
+	$edit_cont_id = $_POST['contrib_Id'];
+	$new_description = $_POST['edit_description'];
+	$new_type = $_POST['edit_c_type'];
+
+	if(!empty($new_type)){
+		//Get Old Type
+		$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE con_id='".$edit_cont_id."';");
+		$stmt->execute();
+		$old_type = null;
+		$stmt->bind_result($old_type);
+		while($stmt->fetch())printf('',$old_type);
+		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='".$new_description."', evaluate='".$new_type."' WHERE con_id='".$edit_cont_id."';");
+		$stmt->execute();
+		//Compare old type to new type
+		if($old_type != $new_type){
+			//if positive changed to negative, decrement progress
+			if($new_type == 'negative'){
+				$stmt = $mysqli -> prepare("SELECT progress FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				$progress = null;
+				$stmt->bind_result($progress);
+				while($stmt->fetch())printf('',$progress);
+				$progress = $progress - 1;
+				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				}			
+			//if negative changed to positive, increment progress
+			if($new_type == 'positive'){
+				$stmt = $mysqli -> prepare("SELECT progress FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				$progress = null;
+				$stmt->bind_result($progress);
+				while($stmt->fetch())printf('',$progress);
+				$progress = $progress + 1;
+				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+				}
+			}
+		}
 ?>
 
     <!-- Navigation -->
@@ -160,13 +211,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</thead>
 					<tbody>
 					<?php
-					$stmt = $mysqli -> prepare("SELECT description, g_date FROM contribution WHERE g_id=$selectedGoal_id;");
+					$stmt = $mysqli -> prepare("SELECT description, g_date, evaluate, con_id FROM contribution WHERE g_id=$selectedGoal_id;");
 					$stmt->execute();
 					$tgdescription=null;
 					$tgDate=null;		
-					$stmt->bind_result($tgdescription, $tgDate);
+					$tgEval=null;
+					$stmt->bind_result($tgdescription, $tgDate, $tgEval, $con_id);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()" >Edit</button></td></tr>',$tgDate, $tgdescription);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><input style="display: none;" type="text" name="%s" value="%s" /><input style="display: none;" type="text" name="%s" value="%s" />
+						<input style="display: none;" type="text" name="%s" value="%s" /><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()"  >Edit</button>
+						</td></tr>',$tgDate, $tgdescription, $tgdescription,$tgdescription,$tgEval,$tgEval, $con_id, $con_id);		  
 					?>
 					</tbody>
 				</table>
@@ -175,7 +229,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
       
 		
 		</div>
-	<a href="#codeday" id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
+		<a id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
         </div>
@@ -216,7 +270,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</form>
 	</div>
 </div>
-
 <!--abandon goal modal-->
 <div id="abandon_modal" class="modal">
 	<div class="modal-content">
@@ -235,7 +288,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 //complete goal modal functionality
 function complete_goal_button_cb() {	
 	var complete_modal = document.getElementById('complete_modal');
-
 	complete_modal.style.display = "block";
 	
 	// When the user clicks anywhere outside of the modal, close it
@@ -249,7 +301,6 @@ function complete_goal_button_cb() {
 	document.getElementById('complete_modal_no').onclick = function(event) {
 		complete_modal.style.display = "none";
 	}
-
 	//defining cb for when user clicks yes 
 	document.getElementById('complete_modal_yes').onclick = function(event) {
 		complete_modal.style.display = "none";
@@ -315,63 +366,66 @@ function abandon_goal_button_cb() {
 
 	<!-- Add Contribution Modal -->
 	<div id="AddContModal" class="modal">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h3 class="modal-title">Add Contribution</h3>
-				</div>
-				<div class="modal-body"  autofocus="true">
-				<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
-					<table>
-						<tr>
-							<td><label>Description</label></td>
-							<td><input type="text" name="description" /></td>
-						</tr>
-						<tr>
-							<td><label>Contribution Type</label></td>
-							<td><select name="c_type" >
-								<option value="positive">Positive</option>
-								<option value="negative">Negative</option>
-							</select></td>
-						</tr>
-						<tr>
-							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
-						</tr>
-					</table>
-					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
-				</form>
-				</div>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h3 class="modal-title">Add Contribution</h3>
 			</div>
+			<div class="modal-body"  autofocus="true">
+			<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
+				<table>
+					<tr>
+						<td><label>Description</label></td>
+						<td><input type="text" name="add_description" /></td>
+					</tr>
+					<tr>
+						<td><label>Contribution Type</label></td>
+						<td><select name="add_c_type" >
+							<option value="positive">Positive</option>
+							<option value="negative">Negative</option>
+						</select></td>
+					</tr>
+					<tr>
+						<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
+					</tr>
+				</table>
+				<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
+			</form>
+			</div>
+		</div>
 	</div>
 
 
 	<!-- Edit Contribution Modal -->
 	<div id="EditContModal" class="modal" modal.style.display="block">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h3 class="modal-title">Edit Contribution</h3>
-				</div>
-				<div class="modal-body"  autofocus="true">
-					<table>
-						<form action="goals.php" method="POST" id="addform">
-						<tr>
-							<td><label>Description</label></td>
-							<td><input type="text" name="description" /></td>
-						</tr>
-						<tr>
-							<td><label>Contribution Type</label></td>
-							<td><select name="c_type" required>
-								<option value="positive">Positive</option>
-								<option value="negative">Negative</option>
-							</select></td>
-						</tr>
-					</table>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
-				</div>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h3 class="modal-title">Edit Contribution</h3>
 			</div>
+			<div class="modal-body"  autofocus="true">
+			<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
+				<table>
+					<tr>
+						<td><label>Description</label></td>
+						<td><input type="text" name="edit_description" id="edit_desc"/></td>
+					</tr>
+					<tr>
+						<td><label>Contribution Type</label></td>
+						<td><select id="edit_type" name="edit_c_type" >
+							<option value="positive">Positive</option>
+							<option value="negative">Negative</option>
+						</select></td>
+					</tr>
+					<tr>
+						<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
+						<input " type="text" name="contrib_Id" id="edit_contrib_Id" style="display:none;" />
+					</tr>
+				</table>
+				<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
+			</form>
+			</div>
+		</div>
 	</div>
  <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -407,6 +461,30 @@ function abandon_goal_button_cb() {
 
 	}
 	</script>
+
+	<script type="text/JavaScript"language="javascript">
+	$(function(){
+    
+		$(editModalBtn).click(function() {
+			var $cont_id_val = $(this).prev().val();
+        		//alert($cont_id_val);
+        		$(edit_contrib_Id).val($cont_id_val);
+
+        		var $edit_dess = $(this).prev().prev().prev().val();
+        		$(edit_desc).val($edit_dess);
+			
+        		var $e_eval = $(this).prev().prev().val();
+			var $eval_select = document.getElementById('edit_type');
+			for(var i, j = 0; i = $eval_select.options[j]; j++){
+				if(i.value == $e_eval){
+					$eval_select.selectedIndex = j;
+					break;
+				}
+			}
+    		});
+    
+	});
+	</script>
 	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
@@ -424,9 +502,6 @@ function abandon_goal_button_cb() {
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
-    $(editModalBtn).click(function() {
-	var $contribution_id = $(this).prev().val();
-	});
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
