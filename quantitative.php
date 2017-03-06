@@ -1,3 +1,12 @@
+ <?php
+//start session 
+session_start();
+//check if variable is true, otherwise deny access
+if(!$_SESSION['auth'])
+{
+    header('location:login.php');
+}
+?>
 <?php 
  include('oldScaffolding/connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
@@ -139,7 +148,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 									<p>Date:	</p>
 								</td>
 								<td>
-									<input type="text" name="add_date" id="add_date" required>
+									<input type="date" name="add_date" id="add_date" required>
 								</td>
 							</tr>
 							<tr>
@@ -242,6 +251,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     </li>
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
+                    </li>
+                    <li>
+                    	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
                 </ul>
             </div>
