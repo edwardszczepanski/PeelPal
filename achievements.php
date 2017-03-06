@@ -2,7 +2,6 @@
 include('oldScaffolding/connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
-
 ?>
 
 <!DOCTYPE html>
@@ -65,12 +64,22 @@ or die ("Connection failed");
         </div>
     </nav>
 
+<?php
+# Getting posted variables from goals.php
+$userID=$_POST['userID'];
+# echo $_POST['userID'];
+$username = $_POST['username'];
+?>
+
     <section id="portfolio" class="bg-light-gray">
 
-
+		<!-- Displaying Achievements header with username -->
 		<div class="row">
 			<div class="col-lg-12 text-center">
+				<h1 style = "margin-left: 20%; color: white; text-align: left;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
+			<!--
 				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
+				-->
 			</div>
 		</div>
 
@@ -90,15 +99,17 @@ or die ("Connection failed");
 					</thead>
 					<tbody>
 					<?php
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1;");
-						$stmt -> execute();
+						# Query database for user-specific achievements (using user_id, not username)
+						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';");
+						$stmt -> execute(); 
 						$goalName = null;
 						$endDate = null;
 						$daysToComplete = null;
 						$trophies = null;	
 						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies);	
 						$stmt -> store_result();
-						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $goalName, $endDate, $daysToComplete, $trophies);
+						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $goalName, $endDate, $daysToComplete, $trophies);	
+					#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
 					?>
 
 					</tbody>
