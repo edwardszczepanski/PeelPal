@@ -32,8 +32,10 @@
 			else{
 				echo "<h2>Wrong username or password...</h2>";
 			}*/
+
 		}			
-?>
+	?>
+
 <?php		
 	$goalTypePicked = $_POST['goalTypePicked'];			
 	$NoticeTypePicked = $_POST['NoticeTypePicked'];			
@@ -41,6 +43,7 @@
 	$gdInput = $_POST['gdInput'];			
 	$tnInput = $_POST['tnInput'];			
 	$sdInput = $_POST['sdInput'];			
+
 	
 /*
 	if($goalTypePicked==null&&$NoticeTypePicked==null&&$goalDesccription==null)
@@ -234,8 +237,24 @@
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
-		<button id="createGoalBtn" class="btn btn-primary portfolio-link" >New Goal</button> 
+
+<!--		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a> 
+-->	
+	<button id = "createGoalBtn" class = "btn btn-primary portfolio-link" >New Goal</button>
+		 
+	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
+	
+
+	<form id="achievementForm" method = "POST" id="sendForm">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
+	</form>
+	
+
+
+<!--		<button id="createGoalBtn" class="btn btn-primary portfolio-link" >New Goal</button> 
 	<a href="achievements.php" class="btn btn-primary">Achievements</a>
+-->
         <P></p>
 		<div class="row">
 								    
@@ -402,6 +421,15 @@
 	});
  
 </script>
+<script type="text/JavaScript"language="javascript">
+        $(achievementBtn).click(function() {
+                document.getElementById("achievementForm").target='_blank';  
+                document.getElementById("achievementForm").action="././achievements.php";
+                document.getElementById("achievementForm").submit();
+        });
+ 
+</script>
+
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
