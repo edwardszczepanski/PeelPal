@@ -186,16 +186,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</thead>
 					<tbody>
 					<?php
-					$stmt = $mysqli -> prepare("SELECT description, g_date, evaluate FROM contribution WHERE g_id=$selectedGoal_id;");
+					$stmt = $mysqli -> prepare("SELECT description, g_date, evaluate, con_id FROM contribution WHERE g_id=$selectedGoal_id;");
 					$stmt->execute();
 					$tgdescription=null;
 					$tgDate=null;		
 					$tgEval=null;
-					$stmt->bind_result($tgdescription, $tgDate, $tgEval);
+					$stmt->bind_result($tgdescription, $tgDate, $tgEval, $con_id);
 					$stmt->store_result();
 					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><input style="display: none;" type="text" name="%s" value="%s" /><input style="display: none;" type="text" name="%s" value="%s" /><input style="display: none;" type="text" name="%s" value="%s" />
-						<button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()"  >Edit</button>
-						</td></tr>',$tgDate, $tgdescription, $tgDate,$tgDate,$tgdescription,$tgdescription,$tgEval,$tgEval);		  
+						<input style="display: none;" type="text" name="%s" value="%s" /><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()"  >Edit</button>
+						</td></tr>',$tgDate, $tgdescription, $tgDate,$tgDate,$tgdescription,$tgdescription,$tgEval,$tgEval, $con_id, $con_id);		  
 					?>
 					</tbody>
 				</table>
@@ -396,7 +396,7 @@ function abandon_goal_button_cb() {
 						</tr>
 						<tr>
 							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
-							<input type="text" name="date_of_original" id="edit_date"  />
+							<input style="width: 50px; " type="text" name="contrib_Id" id="edit_contrib_Id">
 						</tr>
 					</table>
 					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
@@ -443,18 +443,15 @@ function abandon_goal_button_cb() {
 	$(function(){
     
 		$(editModalBtn).click(function() {
-			var $edit_date = document.getElementById('edit_date');
-			var $edit_desc = document.getElementById('edit_desc');
-		        var $edate = $(this).parent().children()[2];
-        		var $edesc = $(this).parent().children()[3];
-        		var $e_eval = $(this).parent().children()[4];
-        		var $edate_val = $edate.val();
-        		var $edesc_val = $edesc.val();
-        		var $e_eval_val = $e_eval.val();
-        		$edit_date.val($edate_val);
-        		$edit_desc.val($edesc_val);
-        		var $edit_eve = $(this).prev().prev().val();
-        
+			var $cont_id_val = $(this).prev().val();
+        		//alert($cont_id_val);
+        		$(edit_contrib_Id).val($cont_id_val);
+
+        		var $edit_dess = $(this).prev().prev().prev().val();
+        		$(edit_desc).val($edit_dess);
+			
+        		var $e_eval = $(this).prev().prev().val();
+
     		});
     
 	});
