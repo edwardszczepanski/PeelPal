@@ -451,7 +451,13 @@ function abandon_goal_button_cb() {
         		$(edit_desc).val($edit_dess);
 			
         		var $e_eval = $(this).prev().prev().val();
-
+			var $eval_select = document.getElementById('edit_type');
+			for(var i, j = 0; i = $eval_select.options[j]; j++){
+				if(i.value == $e_eval){
+					$eval_select.selectedIndex = j;
+					break;
+				}
+			}
     		});
     
 	});
