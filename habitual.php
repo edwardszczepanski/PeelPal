@@ -422,7 +422,7 @@ function abandon_goal_button_cb() {
 					</tr>
 					<tr>
 						<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
-						<input style="width: 50px; " type="text" name="contrib_Id" id="edit_contrib_Id" style="display:none;" />
+						<input " type="text" name="contrib_Id" id="edit_contrib_Id" style="display:none;" />
 					</tr>
 				</table>
 				<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
