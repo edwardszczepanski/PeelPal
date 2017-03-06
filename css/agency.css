@@ -1,5 +1,5 @@
 
-1,
+h1,
 h2,
 h3,
 h4,
@@ -108,7 +108,7 @@ a:hover {
 .btn-primary {
     color: #fff;
     background-color: #333;
-    border-color: #ffcc10
+    border-color: #333;
 }
 
 .btn-primary.active,
@@ -117,8 +117,8 @@ a:hover {
 .btn-primary:hover,
 .open .dropdown-toggle.btn-primary {
     color: #fff;
-    background-color: #fff;
-    border-color: #ffcc10
+    background-color: #333;
+    border-color: #ffcc10;
 }
 
 .btn-primary.disabled,
