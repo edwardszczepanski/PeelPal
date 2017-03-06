@@ -382,7 +382,6 @@ function abandon_goal_button_cb() {
 				</div>
 				<div class="modal-body"  autofocus="true">
 				<form action="././habitual.php" method="POST" id="addform" style="margin-top: 2%;">
-					<label id="test_label" />
 					<table>
 						<tr>
 							<td><label>Description</label></td>
@@ -440,27 +439,27 @@ function abandon_goal_button_cb() {
 	}
 	</script>
 
-/*	<script type="text/JavaScript"language="javascript">
+	<script type="text/JavaScript"language="javascript">
 	$(function(){
     
 		$(editModalBtn).click(function() {
-        		var $contrib_date = 'something'; document.getElementById(editModalBtn).value;
-		        $(edit_cont_id).value = $contrib_date;
-		        var $da = $(this).parent().children()[0];
-        		var $de = $(this).parent().parent().children()[1];
-        		var $da1 = $da.children;
-        		var $da11 = $da1[0].innerHTML;
-        		var $de1 = $de.children;
-        		var $de11 = $de1[0].innerHTML;
-        		$(edit_date).val($da11);
-        		$(edit_desc).val($de11);
+			var $edit_date = document.getElementById('edit_date');
+			var $edit_desc = document.getElementById('edit_desc');
+		        var $edate = $(this).parent().children()[2];
+        		var $edesc = $(this).parent().children()[3];
+        		var $e_eval = $(this).parent().children()[4];
+        		var $edate_val = $edate.val();
+        		var $edesc_val = $edesc.val();
+        		var $e_eval_val = $e_eval.val();
+        		$edit_date.val($edate_val);
+        		$edit_desc.val($edesc_val);
         		var $edit_eve = $(this).prev().prev().val();
         
     		});
     
 	});
 	</script>
-*/	
+	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
     // Get the modal
@@ -477,14 +476,6 @@ function abandon_goal_button_cb() {
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
-	var $edit_date = document.getElementById("edit_date");
-        var $date = $(edit_btn).parent().children()[0];
-        var $edit_date_val = "something"; /*document.getElementById(editModalBtn).value;*/
-        $edit_date.val($edit_date_val);
-	var tst_lbl = document.getElementById("test_label");
-	tst_lbl.val("this is a test");
-	var $e_date=document.getElementById("EditModalBtn").previousSibling.previousSibling.innerHTML; 
-	$edit_date.val($e_date);
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
