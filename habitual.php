@@ -77,17 +77,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	}
 
 	/*If editing a contribution: */
-	$change_on_date = $_POST['date_of_original'];
+	$edit_cont_id = $_POST['contrib_Id'];
 	$new_description = $_POST['edit_description'];
 	$new_type = $_POST['edit_c_type'];
 
 	if(!empty($new_type)){
-		$stmt = $mysqli -> prepare("SELECT con_id FROM peelPal.contribution WHERE g_id='".$selectedGoal_id."' and g_date='".$change_on_date."';");
-		$stmt->execute();
-		$con_id = null;
-		$stmt -> bind_result($con_id);
-		while($stmt->fetch())printf('',$con_id);
-		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='".$new_description."', evaluate='".$new_type."' WHERE con_id='".$con_id."';");
+		$stmt = $mysqli -> prepare("UPDATE peelPal.contribution SET description='".$new_description."', evaluate='".$new_type."' WHERE con_id='".$edit_cont_id."';");
 		$stmt->execute();
 
 		}
