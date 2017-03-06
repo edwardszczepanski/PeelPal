@@ -205,18 +205,6 @@
 
     </section>
 			
-    <!--footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="copyright">Copyright &copy; PeelPal 2017</span>
-                    <a href="#page-top" title="To Top" class="page-scroll" style="padding:10px">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer-->
-       
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
