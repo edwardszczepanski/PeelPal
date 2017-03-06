@@ -36,12 +36,12 @@
 		$number=$_POST['create_number'];
 
 		if(isset($username) && isset($password) && !empty($username) && !empty($password) && isset($email) && isset($number) && !empty($email) && !empty($number)){
-			$sql = "INSERT INTO users (username, password, email, phone_num) VALUES ('{$username}','{$password}','{$email}','{$number}');";
+			$sql = "INSERT INTO user (username, password, email, phone_num) VALUES ('{$username}','{$password}','{$email}','{$number}');";
 			header("location:{$sql}");
 			if ($mysqli->query($sql) === TRUE){
-				header('location:http://edwardszc.com');
+				header('location:goals.php');
 			} else {
-				header('location:https://youtube.com');
+				echo "<h2>Error Inserting Values into Database</h2>";
 			}
 		}
     }
