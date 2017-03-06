@@ -77,13 +77,16 @@ $username = $_POST['username'];
 		<div class="row">
 			<div class="col-lg-12 text-center">
 				<h1 style = "margin-left: 20%; color: white; text-align: left;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
+			<!--
+				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
+				-->
 			</div>
 		</div>
 
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">				
 		<div class="row">
-			<div class="col-md-9 col-sm-8 portfolio-item">
+			<div>
 				<table class="table table-hover" style="    background-color: white;">
 					<thead>
 					  <tr>

@@ -1,0 +1,7 @@
+<?php
+$server = "ix.cs.uoregon.edu";
+$dbname ="peelPal";
+$user = "zhoul";
+$pass = "sx3sx3";
+$port="3109";
+?>
