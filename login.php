@@ -131,10 +131,6 @@
 			<div class="row">
 				<div class="span12">
 					<div class="" id="loginModal">
-					  <div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						<h3>Have an Account?</h3>
-					  </div>
 					  <div class="modal-body">
 						<div class="well">
 						  <ul class="nav nav-tabs">
@@ -209,18 +205,6 @@
 
     </section>
 			
-    <!--footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="copyright">Copyright &copy; PeelPal 2017</span>
-                    <a href="#page-top" title="To Top" class="page-scroll" style="padding:10px">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer-->
-       
     <script src="js/jquery.js"></script>
 
     <script src="js/bootstrap.min.js"></script>
