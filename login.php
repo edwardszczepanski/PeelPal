@@ -155,14 +155,14 @@
 								  <div class="control-group" style="margin-top:14px;">
 									<!-- Button -->
 									<div class="controls">
-									  <button class="btn btn-success">Login</button>
+									  <button class="btn btn-primary">Login</button>
 									</div>
 								  </div>
 								</fieldset>
 							  </form>                
 							</div>
 							<div class="tab-pane fade" id="create">
-							  <form id="tab">
+							  <form id="tab" style="margin-left:18px; margin-bottom:20px;">
                                 <br>
 								<label>Username</label>
                                 <br>
@@ -184,7 +184,8 @@
                                 <br>
 								<textarea value="Smith" rows="3" class="input-xlarge">
 								</textarea>
-			 
+			                    <br> 
+			                    <br> 
 								<div>
 								  <button class="btn btn-primary">Create Account</button>
 								</div>
