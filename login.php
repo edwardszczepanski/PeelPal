@@ -1,15 +1,12 @@
 <?php 
- include('oldScaffolding/connectionData.txt');
+ include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
  ?>
 <?php
-		//$username=$_POST['username'];
-		//$password=$_POST['password'];
-		$username="tomz";
-		$password="123456";
-		//echo "username: ".$username."<br>";
-		//validate the username and password
+	if (isset($_POST['login'])) {
+		$username=$_POST['username'];
+		$password=$_POST['password'];
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
 		{
 			$stmt = $mysqli -> prepare("SELECT * FROM user WHERE username ='$username' AND password = '$password';");
@@ -19,20 +16,35 @@
 			$password=null;
 			$u_email=null;
 			$u_phonenum=null; 
- 			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
+			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
 			while($stmt->fetch())printf('',$user_id);	
 			//if user exists, redirect to index page
-			/*
 			if($stmt->num_rows==1)
 			{
 				session_start();
 				$_SESSION['auth']='true';
-				header('location:index.php');
+				header('location:goals.php');
 			}
 			else{
 				echo "<h2>Wrong username or password...</h2>";
-			}*/
+			}
 		}			
+    } else {
+		$username=$_POST['create_username'];
+		$password=$_POST['create_password'];
+		$email=$_POST['create_email'];
+		$number=$_POST['create_number'];
+
+		if(isset($username) && isset($password) && !empty($username) && !empty($password) && isset($email) && isset($number) && !empty($email) && !empty($number)){
+			$sql = "INSERT INTO user (username, password, email, phone_num) VALUES ('{$username}','{$password}','{$email}','{$number}');";
+			header("location:{$sql}");
+			if ($mysqli->query($sql) === TRUE){
+				header('location:goals.php');
+			} else {
+				echo "<h2>Error Inserting Values into Database</h2>";
+			}
+		}
+    }
 ?>
 
 <!DOCTYPE html>
@@ -131,7 +143,7 @@
 						  </ul>
 						  <div id="myTabContent" class="tab-content">
 							<div class="tab-pane active in" id="login">
-							  <form class="form-horizontal" action='' method="POST">
+							  <form class="form-horizontal" method="POST">
 								<fieldset style="margin-top: 20px; margin-left: 30px; margin-bottom: 20px;">
 								  <div id="legend">
 									<legend class="">Login</legend>
@@ -155,38 +167,36 @@
 								  <div class="control-group" style="margin-top:14px;">
 									<!-- Button -->
 									<div class="controls">
-									  <button class="btn btn-success">Login</button>
+									  <input name="login" class="btn btn-primary" type="submit" value="Login">
 									</div>
 								  </div>
 								</fieldset>
 							  </form>                
 							</div>
 							<div class="tab-pane fade" id="create">
-							  <form id="tab">
-                                <br>
+                              <div id="legend" style="margin-top: 20px;">
+                                <legend class="">Create an Account</legend>
+                              </div>    
+							  <form id="tab" method="POST" style="margin-left:18px; margin-bottom:20px;">
 								<label>Username</label>
                                 <br>
-								<input type="text" value="" class="input-xlarge">
+								<input name="create_username" type="text" class="input-xlarge">
                                 <br>
-								<label>First Name</label>
+								<label>Password</label>
                                 <br>
-								<input type="text" value="" class="input-xlarge">
-                                <br>
-								<label>Last Name</label>
-                                <br>
-								<input type="text" value="" class="input-xlarge">
+								<input name="create_password" type="password" class="input-xlarge">
                                 <br>
 								<label>Email</label>
                                 <br>
-								<input type="text" value="" class="input-xlarge">
+								<input name="create_email" type="text" class="input-xlarge">
                                 <br>
-								<label>Address</label>
+								<label>Phone Number</label>
                                 <br>
-								<textarea value="Smith" rows="3" class="input-xlarge">
-								</textarea>
-			 
+								<input name="create_number" type="text" class="input-xlarge">
+                                <br>
+			                    <br> 
 								<div>
-								  <button class="btn btn-primary">Create Account</button>
+								  <input name="create" class="btn btn-primary" type="submit" value="Create">
 								</div>
 							  </form>
 							</div>
