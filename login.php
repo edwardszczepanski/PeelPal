@@ -132,7 +132,7 @@
 						  <div id="myTabContent" class="tab-content">
 							<div class="tab-pane active in" id="login">
 							  <form class="form-horizontal" action='' method="POST">
-								<fieldset>
+								<fieldset style="margin-top: 20px; margin-left: 30px; margin-bottom: 20px;">
 								  <div id="legend">
 									<legend class="">Login</legend>
 								  </div>    
@@ -152,8 +152,7 @@
 									</div>
 								  </div>
 			 
-			 
-								  <div class="control-group">
+								  <div class="control-group" style="margin-top:14px;">
 									<!-- Button -->
 									<div class="controls">
 									  <button class="btn btn-success">Login</button>
@@ -164,15 +163,25 @@
 							</div>
 							<div class="tab-pane fade" id="create">
 							  <form id="tab">
+                                <br>
 								<label>Username</label>
+                                <br>
 								<input type="text" value="" class="input-xlarge">
+                                <br>
 								<label>First Name</label>
+                                <br>
 								<input type="text" value="" class="input-xlarge">
+                                <br>
 								<label>Last Name</label>
+                                <br>
 								<input type="text" value="" class="input-xlarge">
+                                <br>
 								<label>Email</label>
+                                <br>
 								<input type="text" value="" class="input-xlarge">
+                                <br>
 								<label>Address</label>
+                                <br>
 								<textarea value="Smith" rows="3" class="input-xlarge">
 								</textarea>
 			 
