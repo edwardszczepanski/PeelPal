@@ -1,3 +1,12 @@
+ <?php
+//start session 
+session_start();
+//check if variable is true, otherwise deny access
+if(!$_SESSION['auth'])
+{
+    header('location:login.php');
+}
+?>
 <?php 
  include('oldScaffolding/connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
@@ -222,6 +231,9 @@
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+                    <li>
+                    	<a class="page-scroll" href="logout.php">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -296,7 +308,7 @@
 					  </div>
                   </div>
               </div>
-			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($day_diff)*100);
+			  ',$goal_type,$goal_id, $goal_id, $goal_name,$last_act,$num_progress/($day_diff + 1)*100);
 			  ?>
 
 			
