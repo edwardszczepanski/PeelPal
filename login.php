@@ -4,12 +4,11 @@
  or die('Error connecting');
  ?>
 <?php
-		//$username=$_POST['username'];
-		//$password=$_POST['password'];
-		$username="tomz";
-		$password="123456";
+		$username=$_POST['username'];
+		$password=$_POST['password'];
+		//$username="tomz";
+		//$password="123456";
 		//echo "username: ".$username."<br>";
-		//validate the username and password
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
 		{
 			$stmt = $mysqli -> prepare("SELECT * FROM user WHERE username ='$username' AND password = '$password';");
@@ -22,16 +21,16 @@
  			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
 			while($stmt->fetch())printf('',$user_id);	
 			//if user exists, redirect to index page
-			/*
 			if($stmt->num_rows==1)
 			{
 				session_start();
 				$_SESSION['auth']='true';
-				header('location:index.php');
+				header('location:goals.php');
 			}
 			else{
+				header('location:https://google.com');
 				echo "<h2>Wrong username or password...</h2>";
-			}*/
+			}
 		}			
 ?>
 
@@ -131,7 +130,7 @@
 						  </ul>
 						  <div id="myTabContent" class="tab-content">
 							<div class="tab-pane active in" id="login">
-							  <form class="form-horizontal" action='' method="POST">
+							  <form class="form-horizontal" method="POST">
 								<fieldset style="margin-top: 20px; margin-left: 30px; margin-bottom: 20px;">
 								  <div id="legend">
 									<legend class="">Login</legend>
@@ -155,36 +154,33 @@
 								  <div class="control-group" style="margin-top:14px;">
 									<!-- Button -->
 									<div class="controls">
-									  <button class="btn btn-primary">Login</button>
+									  <input class="btn btn-primary" type="submit" value="Login">
 									</div>
 								  </div>
 								</fieldset>
 							  </form>                
 							</div>
 							<div class="tab-pane fade" id="create">
+                              <div id="legend" style="margin-top: 20px;">
+                                <legend class="">Create an Account</legend>
+                              </div>    
 							  <form id="tab" style="margin-left:18px; margin-bottom:20px;">
-                                <br>
 								<label>Username</label>
                                 <br>
 								<input type="text" value="" class="input-xlarge">
                                 <br>
-								<label>First Name</label>
+								<label>Password</label>
                                 <br>
-								<input type="text" value="" class="input-xlarge">
-                                <br>
-								<label>Last Name</label>
-                                <br>
-								<input type="text" value="" class="input-xlarge">
+								<input type="password" value="" class="input-xlarge">
                                 <br>
 								<label>Email</label>
                                 <br>
 								<input type="text" value="" class="input-xlarge">
                                 <br>
-								<label>Address</label>
+								<label>Phone Number</label>
                                 <br>
-								<textarea value="Smith" rows="3" class="input-xlarge">
-								</textarea>
-			                    <br> 
+								<input type="text" value="" class="input-xlarge">
+                                <br>
 			                    <br> 
 								<div>
 								  <button class="btn btn-primary">Create Account</button>
