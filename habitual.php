@@ -186,13 +186,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</thead>
 					<tbody>
 					<?php
-					$stmt = $mysqli -> prepare("SELECT description, g_date FROM contribution WHERE g_id=$selectedGoal_id;");
+					$stmt = $mysqli -> prepare("SELECT description, g_date, evaluate FROM contribution WHERE g_id=$selectedGoal_id;");
 					$stmt->execute();
 					$tgdescription=null;
 					$tgDate=null;		
-					$stmt->bind_result($tgdescription, $tgDate);
+					$tgEval=null;
+					$stmt->bind_result($tgdescription, $tgDate, $tgEval);
 					$stmt->store_result();
-					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()" value=%s >Edit</button></td></tr>',$tgDate, $tgdescription, $tgDate);		  
+					while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td><input style="display: none;" type="text" name="%s" value="%s" /><input style="display: none;" type="text" name="%s" value="%s" /><input style="display: none;" type="text" name="%s" value="%s" />
+						<button id="editModalBtn" type="button" class="btn btn-info" onclick="pop_Edit()"  >Edit</button>
+						</td></tr>',$tgDate, $tgdescription, $tgDate,$tgDate,$tgdescription,$tgdescription,$tgEval,$tgEval);		  
 					?>
 					</tbody>
 				</table>
@@ -363,7 +366,7 @@ function abandon_goal_button_cb() {
 							<input type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>" style="display:none;" />
 						</tr>
 					</table>
-					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>				
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Submit Contribution</button>
 				</form>
 				</div>
 			</div>
@@ -474,14 +477,14 @@ function abandon_goal_button_cb() {
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
     }
-    edit_btn.onclick = function(){
-	var $edit_date = "something"; /*document.getElementById("edit_date");*/
-        var $da = $(this).parent().children()[0];
-        var $edit_date_val = /*document.getElementById(editModalBtn).value;*/
-        $edit_date.value = $edit_date_val;
+	var $edit_date = document.getElementById("edit_date");
+        var $date = $(edit_btn).parent().children()[0];
+        var $edit_date_val = "something"; /*document.getElementById(editModalBtn).value;*/
+        $edit_date.val($edit_date_val);
 	var tst_lbl = document.getElementById("test_label");
-	$(tst_lbl).val("this is a test");
-	}
+	tst_lbl.val("this is a test");
+	var $e_date=document.getElementById("EditModalBtn").previousSibling.previousSibling.innerHTML; 
+	$edit_date.val($e_date);
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == edit_modal) {
