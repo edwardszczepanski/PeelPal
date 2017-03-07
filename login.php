@@ -23,6 +23,8 @@
 			{
 				session_start();
 				$_SESSION['auth']='true';
+				$_SESSION['username']=$username;
+				$_SESSION['password']=$password;
 				header('location:goals.php');
 			}
 			else{
