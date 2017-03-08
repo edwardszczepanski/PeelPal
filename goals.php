@@ -81,7 +81,7 @@ if(!$_SESSION['auth'])
 				$newGoalId=null;
 				$stmt->bind_result($newGoalId);		
 				while($stmt->fetch())printf('',$newGoalId);			
-				$stmt = $mysqli -> prepare("INSERT INTO peelPal.target (t_value,s_value, goal_id,l_value, t_date) VALUES ('".$tnInput."','".$sdInput."','".$newGoalId."','".$sdInput."','".$gdInput."');");
+				$stmt = $mysqli -> prepare("INSERT INTO peelPal.target (t_value,s_value, goal_id,l_value) VALUES ('".$tnInput."','".$sdInput."','".$newGoalId."','".$sdInput."');");
 				$stmt->execute();
 
 			}
@@ -378,7 +378,7 @@ if(!$_SESSION['auth'])
         }
     }
 	</script>
-    <!--footer>
+    <footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -388,19 +388,21 @@ if(!$_SESSION['auth'])
                 </div>
             </div>
         </div>
-    </footer-->
+    </footer>
        
 <script type="text/JavaScript"language="javascript">
 	$(aclick).click(function() {
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
-		//document.getElementById("hForm").target='_blank';  
+		document.getElementById("hForm").target='_blank';  
 		document.getElementById("hForm").action="././habitual.php";
 		document.getElementById("hForm").submit();
 	});
 	
-	
+</script>
+
+<script type="text/JavaScript"language="javascript">	
 	$(quantitativeLabel).click(function(){
 		if (($(gdInputDiv).css('visibility') === 'hidden')&&($(tnInputDiv).css('visibility') === 'hidden')) {
 			$(gdInputDiv).css('visibility', 'visible');
@@ -427,7 +429,7 @@ if(!$_SESSION['auth'])
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
-		//document.getElementById("hForm").target='_blank';  
+		document.getElementById("hForm").target='_blank';  
 		document.getElementById("hForm").action="././quantitative.php";
 		document.getElementById("hForm").submit();
 	});
@@ -435,7 +437,7 @@ if(!$_SESSION['auth'])
 </script>
 <script type="text/JavaScript"language="javascript">
         $(achievementBtn).click(function() {
-                //document.getElementById("achievementForm").target='_blank';  
+                document.getElementById("achievementForm").target='_blank';  
                 document.getElementById("achievementForm").action="././achievements.php";
                 document.getElementById("achievementForm").submit();
         });
