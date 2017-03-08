@@ -265,6 +265,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	if($completion_flag==1){
 		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET g_state=1 WHERE goal_id='".$selectedGoal_id."';");
 		$stmt->execute();
+		$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET endDate=CURDATE() WHERE goal_id='".$selectedGoal_id."';");
+		$stmt->execute();
 		echo '<script>window.location.replace("goals.php");</script>';
 	}
 ?>
