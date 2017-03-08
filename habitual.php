@@ -46,7 +46,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 </head>
 
-<body id="page-top" class="index">
+<body style="background-color: #ffcc10;" id="page-top" class="index">
 
 <?php
 	/*If adding contribution: */

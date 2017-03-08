@@ -21,7 +21,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head style="background-color: #ffcc10">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta charset="utf-8">
