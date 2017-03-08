@@ -13,10 +13,10 @@ if(!$_SESSION['auth'])
  or die('Error connecting');
  ?>
 <?php
-		//$username=$_POST['username'];
-		//$password=$_POST['password'];
-		$username="tomz";
-		$password="123456";
+		$username=$_SESSION['username'];
+		$password=$_SESSION['password'];
+		//$username="tomz";
+		//$password="123456";
 		//echo "username: ".$username."<br>";
 		//validate the username and password
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
@@ -313,7 +313,7 @@ if(!$_SESSION['auth'])
 
 			
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.g_state=0");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.g_state=0 AND g.u_id=$user_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
