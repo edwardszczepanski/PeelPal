@@ -88,7 +88,7 @@ $username = $_POST['username'];
 		<!-- Displaying Achievements header with username -->
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<h1 style = "margin-left: 20%; color: white; text-align: left;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
+				<h1 style = "color: white;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
 			<!--
 				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
 				-->

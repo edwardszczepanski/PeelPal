@@ -186,11 +186,11 @@
                                 <br>
 								<label>Email</label>
                                 <br>
-								<input name="create_email" type="text" class="input-xlarge">
+								<input name="create_email" type="email" class="input-xlarge">
                                 <br>
 								<label>Phone Number</label>
                                 <br>
-								<input name="create_number" type="text" class="input-xlarge">
+								<input name="create_number" type="tel" class="input-xlarge">
                                 <br>
 			                    <br> 
 								<div>

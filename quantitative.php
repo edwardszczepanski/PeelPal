@@ -272,7 +272,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					
 			$stmt->bind_result($top_goal_name);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="margin-left: 20%%; color: white;text-align: left;" class="section-heading">%s</h1>',$top_goal_name);
+			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
 			
 			?>
 			</div>
