@@ -378,7 +378,7 @@ if(!$_SESSION['auth'])
         }
     }
 	</script>
-    <footer>
+    <!--footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -388,7 +388,7 @@ if(!$_SESSION['auth'])
                 </div>
             </div>
         </div>
-    </footer>
+    </footer-->
        
 <script type="text/JavaScript"language="javascript">
 	$(aclick).click(function() {
