@@ -291,8 +291,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt->bind_result( $tar_diff);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
-             <div class="col-md-9 col-sm-8 portfolio-item">                  
-                  <div style="padding: 0px; margin: 0px; max-width: 760px;" class="portfolio-caption">
+             <div>                  
+                  <div style="padding: 0px; margin: 0px;" class="portfolio-caption">
  					  <div style="height: 40px;    margin-top: 20px;" class="progress">
 						  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:%s%%">
 						  
@@ -308,7 +308,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</div>
 		
 		<div class="row">
-			<div class="col-md-9 col-sm-8 portfolio-item">
+			<div>
 				<table id="getDate" class="table table-hover" style="    background-color: white;">
 					<thead>
 					  <tr>
@@ -500,18 +500,6 @@ function abandon_goal_button_cb() {
 }
 </script>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="copyright">Copyright &copy; PeelPal 2017</span>
-                    <a href="#page-top" title="To Top" class="page-scroll" style="padding:10px">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
-       
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
