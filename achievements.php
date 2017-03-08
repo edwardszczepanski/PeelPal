@@ -15,7 +15,7 @@ or die ("Connection failed");
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head style="background-color: #ffcc10">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta charset="utf-8">
@@ -131,7 +131,7 @@ $username = $_POST['username'];
       </div>
     </section>
 
-    <footer>
+    <!--footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -141,7 +141,7 @@ $username = $_POST['username'];
                 </div>
             </div>
         </div>
-    </footer>
+    </footer-->
        
     <script src="js/jquery.js"></script>
 
