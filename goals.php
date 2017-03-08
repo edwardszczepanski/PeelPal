@@ -91,7 +91,7 @@ if(!$_SESSION['auth'])
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head style="background-color: #ffcc10">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta charset="utf-8">
@@ -378,7 +378,7 @@ if(!$_SESSION['auth'])
         }
     }
 	</script>
-    <footer>
+    <!--footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -388,14 +388,13 @@ if(!$_SESSION['auth'])
                 </div>
             </div>
         </div>
-    </footer>
+    </footer-->
        
 <script type="text/JavaScript"language="javascript">
 	$(aclick).click(function() {
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
-		document.getElementById("hForm").target='_blank';  
 		document.getElementById("hForm").action="././habitual.php";
 		document.getElementById("hForm").submit();
 	});
@@ -429,7 +428,6 @@ if(!$_SESSION['auth'])
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
 		$(selectedGoal_id).val($correctChild);
-		document.getElementById("hForm").target='_blank';  
 		document.getElementById("hForm").action="././quantitative.php";
 		document.getElementById("hForm").submit();
 	});
@@ -437,7 +435,6 @@ if(!$_SESSION['auth'])
 </script>
 <script type="text/JavaScript"language="javascript">
         $(achievementBtn).click(function() {
-                document.getElementById("achievementForm").target='_blank';  
                 document.getElementById("achievementForm").action="././achievements.php";
                 document.getElementById("achievementForm").submit();
         });
