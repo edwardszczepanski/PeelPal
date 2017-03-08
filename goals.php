@@ -183,7 +183,7 @@ if(!$_SESSION['auth'])
 								<td>
 									<div class="row" id="gdInputDiv" style="visibility: hidden;">
 										<p class="col-md-8">What is your goal deadline?</p>		
-										<input class="col-md-4" style="" id="gdInput" name="gdInput"></input>
+										<input class="col-md-4" style="" id="gdInput" type="date" name="gdInput"></input>
 									</div>
 									
 								</td>
