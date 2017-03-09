@@ -69,7 +69,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if($countNum<1){
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
-			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."', update_mark='1' WHERE goal_id='".$selectedGoal_id."';");
 			$stmt ->execute();
 			if($type == 'positive'){
 				/*If type is positive, increment progress value by 1*/
