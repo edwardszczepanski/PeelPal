@@ -17,7 +17,9 @@ if(!$_SESSION['auth'])
 //echo '->'.$_POST['selectedGoal_id'].'<br>';
 $selectedGoal_id=$_POST['selectedGoal_id'];
 
-?>	
+?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -135,12 +137,24 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 		}
 	}	
-?>   
+?>
+<?php
+	$selectedGoal_id=$_POST['selectedGoal_id'];
+	$stmt = $mysqli -> prepare("SELECT t_value, s_value, l_value FROM target WHERE goal_id=$selectedGoal_id;");
+	$stmt->execute();
+	$t_value=null;
+	$s_value=null;
+	$l_value=null;
+
+	$stmt->bind_result($t_value, $s_value, $l_value);
+	$stmt->store_result();
+	while($stmt->fetch())printf('',$t_value, $s_value, $l_value);
+?>	   
 	<div id="myModal" class="modal">
 				<!-- Modal content -->
 				<div class="modal-content">
 					<span id="add_close" class="close">&times;</span>
-					<h3>Add Update</h3>
+					<h3>Add Update</h3><p>Your current number is: <?php echo $l_value;?></p><p>Your target number is: <?php echo $t_value;?></p>
 					<form action="quantitative.php" method="POST" id="senddForm" style="margin-top: 2%;">	
 						<table class="addUpdate">
 							<tr>
@@ -157,7 +171,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 								</td>
 								<td>
 									<input type="text" name="add_des" id="add_des" required>
-
+								</td>
+								<td>
+									
+								</td>
 							</tr>
 							<tr>
 								<td>
@@ -185,7 +202,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	<div id="edit_myModal" class="modal">
             <div class="modal-content">
             <span class="close">&times;</span>
-            <h3>Please fill information</h3>
+            <h3>Edit Update</h3><p>Your current number is: <?php echo $l_value;?></p><p>Your target number is: <?php echo $t_value;?></p>
             <form action="quantitative.php" method="POST" id="sendForm" style="margin-top: 2%;">	
             	<table class="editUpdate">
 					<tr>
