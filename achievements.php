@@ -7,6 +7,7 @@ if(!$_SESSION['auth'])
     header('location:login.php');
 }
 ?>
+
 <?php
 include('oldScaffolding/connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
@@ -112,15 +113,18 @@ $username = $_POST['username'];
 					<tbody>
 					<?php
 						# Query database for user-specific achievements (using user_id, not username)
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';");
+						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy, goal_id FROM goal WHERE g_state = 1 AND u_id='$userID';");
 						$stmt -> execute(); 
 						$goalName = null;
 						$endDate = null;
 						$daysToComplete = null;
 						$trophies = null;	
-						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies);	
+						$goalId = null;
+						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goalId);	
 						$stmt -> store_result();
-						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $goalName, $endDate, $daysToComplete, $trophies);	
+						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td>
+						<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td></tr>	
+						', $goalName, $endDate, $daysToComplete, $trophies, $goalId);	
 					#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
 					?>
 
@@ -130,6 +134,61 @@ $username = $_POST['username'];
 		</div>
       </div>
     </section>
+
+<?php
+        //delete the goal if it has been marked for deletion
+        $flag_id = $_POST['flag_id'];
+        if($flag_id){
+                $stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE g_id='".$flag_id."';");
+                $stmt->execute();
+                $stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$flag_id."';");
+                $stmt->execute();
+                echo '<script>window.location.replace("achievements.php");</script>';
+        }
+?>
+
+<!--remove goal modal-->
+<div id="remove_modal" class="modal">
+<div class="modal-content">
+	<h3>Do you really want to remove this goal?</h3>
+	<h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
+                <form action="achievements.php" method="POST" id="removeForm" style="margin-top: 2%;">
+                        <button type="button" id="remove_modal_yes" class="btn btn-primary">Yes</button>
+                        <button type="button" id="remove_modal_no" class="btn btn-primary">No</button>
+                        <input style="display: none;" type="text" id="flag_id">
+                        <input style="display: none;" type="text" id="userID" value=<?php echo $userID;?>>
+                        <input style="display: none;" type="text" id="userID" value=<?php echo $username;?>>
+                </form>
+        </div>
+</div>
+
+<script>
+//remove goal modal functionality
+function delete_button_cb(goal_id) {     
+        var remove_modal = document.getElementById('remove_modal');
+	
+        remove_modal.style.display = "block";
+                
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+                if (event.target == remove_modal) {
+                        remove_modal.style.display = "none";
+                }
+        }
+        
+        //defining cb for when user clicks no
+        document.getElementById('remove_modal_no').onclick = function(event) {
+                remove_modal.style.display = "none";
+        }
+
+        //defining cb for when user clicks yes 
+        document.getElementById('remove_modal_yes').onclick = function(event) {
+                remove_modal.style.display = "none";
+                document.getElementById("flag_id").value = goal_id;
+                document.getElementById("removeForm").submit();
+        }
+}
+</script>
 
     <!--footer>
         <div class="container">
