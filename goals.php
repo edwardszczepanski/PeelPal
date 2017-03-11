@@ -1,4 +1,4 @@
- <?php
+<?php
 //start session 
 session_start();
 //check if variable is true, otherwise deny access
@@ -257,7 +257,7 @@ if(!$_SESSION['auth'])
 	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
 	
 
-	<form id="achievementForm" method = "POST" id="sendForm">
+	<form id="achievementForm" method = "GET" id="sendForm">
 		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
 		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 	</form>
@@ -433,10 +433,11 @@ if(!$_SESSION['auth'])
 	});
  
 </script>
+
 <script type="text/JavaScript"language="javascript">
-        $(achievementBtn).click(function() {
+	$(achievementBtn).click(function() {
                 document.getElementById("achievementForm").action="././achievements.php";
-                document.getElementById("achievementForm").submit();
+		document.getElementById("achievementForm").submit();
         });
  
 </script>
