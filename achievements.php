@@ -50,14 +50,13 @@ $stmt->close();
 </head>
 
 <body id="page-top" class="index">
-<<<<<<< HEAD
 <?php
 # Getting posted variables from goals.php
-$userID=$_POST['userID'];
+$userID=$_GET[userID];
 # echo $_POST['userID'];
-$username = $_POST['username'];
+$username = $_GET[username];
 ?>
-=======
+
 
 	<!-- Facebook Share Button: -->
 	<div id="fb-root"></div>
@@ -70,7 +69,6 @@ $username = $_POST['username'];
 		}(document, 'script', 'facebook-jssdk'));
 	</script>
 
->>>>>>> bde10d16240328f5a639791bf8a10f43ddc6a55d
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -107,20 +105,12 @@ $username = $_POST['username'];
         </div>
     </nav>
 	<form id="accountForm" method = "POST">
-		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $userID; ?>" >
-		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
+		<input  type = "hidden" name = "userID" value = "<?php echo $userID; ?>" >
+		<input  type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 
 	</form>
 
-<<<<<<< HEAD
-=======
-<?php
-# Getting posted variables from goals.php
-#$userID=$_POST['userID'];
-# echo $_POST['userID'];
-#$username = $_POST['username'];
-?>
->>>>>>> bde10d16240328f5a639791bf8a10f43ddc6a55d
+
 
     <section id="portfolio" class="bg-light-gray">
 
