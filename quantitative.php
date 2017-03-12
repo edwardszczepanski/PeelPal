@@ -296,12 +296,13 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			<div class="col-lg-12 text-center">
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
-			$stmt = $mysqli -> prepare("SELECT g_name FROM goal WHERE goal_id=$selectedGoal_id;");
+			$stmt = $mysqli -> prepare("SELECT g_name, trophy FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
-			$top_goal_name=null;		
-			$stmt->bind_result($top_goal_name);
+			$top_goal_name=null;
+			$trophies = null;
+			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
+			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"></i>',$top_goal_name, $trophies);
 			?>
 			</div>
 		</div>
