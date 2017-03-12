@@ -88,6 +88,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt = $mysqli -> prepare("SELECT trophy FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
 			$stmt->execute();
 			$t_count = null;
+			$stmt->bind_result($t_count);
 			while($stmt->fetch())printf('',$t_count);
 			//Calculate current percent and percent for next trophy(this will allow trophies for better than 100% completion)
 			echo $t_count;
