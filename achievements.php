@@ -2,17 +2,35 @@
 //start session 
 session_start();
 //check if variable is true, otherwise deny access
-if(!$_SESSION['auth'])
-{
-    header('location:login.php');
-}
-?>
 
-<?php
+/*
+Do not redirect from this page, even if nobody is logged in
+getting user_id from current SESSION if someone is logged in
+use this user_id to compare to the user_id in the AJAX URL to see if the current
+logged in person is viewing their own achievements page or someone else's
+ */
+
 include('oldScaffolding/connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
+
+
+if($_SESSION['auth']) {
+	$username = $_SESSION['username'];
+	echo $username;
+        $stmt = $mysqli -> prepare("SELECT user_id FROM user WHERE username ='$username';");
+        $stmt->execute();
+        $user_id=null;
+	$stmt->bind_result($user_id);
+	$stmt->fetch();
+	$stmt->close();
+	echo $user_id; 
+    //header('location:login.php');
+}
 ?>
+
+
+
 
 <?php
 # Checks if username and userID match in URL. If not, URL was likely manually changed to access
@@ -30,6 +48,7 @@ if (! $res) {
 		</script>';
 }
 $stmt->close();
+echo $res;
 ?>
 
 <!DOCTYPE html>
@@ -164,11 +183,15 @@ $username = $_GET[username];
 						$daysToComplete = null;
 						$trophies = null;	
 						$goal_id = null;
-						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goal_idd);	
+						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goal_id);	
 						$stmt -> store_result();
-						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td>
-						<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td></tr>
-						', $goalName, $endDate, $daysToComplete, $trophies, $goal_id);	
+						while($stmt->fetch()) {
+							printf('<tr id=%s><td>%s</td><td>%s</td><td>%s</td><td>%s</td>', $goal_id, $goalName, $endDate, $daysToComplete, $trophies);	
+							if ($user_id == $res) {
+								printf('<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td>', $goal_id);
+							}
+							printf('</tr>');	
+						}
 					?>
 
 					</tbody>
@@ -180,13 +203,13 @@ $username = $_GET[username];
 
 <?php
         //delete the goal if it has been marked for deletion
-        $flag_id = $_POST['flag_id'];
+        $flag_id = $_GET['flag_id'];
         if($flag_id){
                 $stmt = $mysqli -> prepare("DELETE FROM peelPal.contribution WHERE g_id='".$flag_id."';");
                 $stmt->execute();
                 $stmt = $mysqli -> prepare("DELETE FROM peelPal.goal WHERE goal_id='".$flag_id."';");
                 $stmt->execute();
-                echo '<script>window.location.replace("achievements.php");</script>';
+		echo "<script>document.getElementById('".$flag_id."').style = 'display: none';</script>";
         }
 ?>
 
@@ -195,12 +218,12 @@ $username = $_GET[username];
 <div class="modal-content">
 	<h3>Do you really want to remove this goal?</h3>
 	<h3><font color= "red" >This will be permanent, data will not be recoverable</font></h3>
-                <form action="achievements.php" method="POST" id="removeForm" style="margin-top: 2%;">
+                <form action="achievements.php" method="GET" id="removeForm" style="margin-top: 2%;">
                         <button type="button" id="remove_modal_yes" class="btn btn-primary">Yes</button>
                         <button type="button" id="remove_modal_no" class="btn btn-primary">No</button>
-                        <input style="display: none;" type="text" id="flag_id">
-                        <input style="display: none;" type="text" id="userID" value=<?php echo $userID;?>>
-                        <input style="display: none;" type="text" id="userID" value=<?php echo $username;?>>
+			<input style = "display: block" type = "hidden" name = "userID" value ="<?php echo $userID; ?>">
+	                <input style = "display: block" type = "hidden" name = "username" value ="<?php echo $username; ?>">
+                        <input style="display: none;" type="text" name ="flag_id" id="flag_id">
                 </form>
         </div>
 </div>
@@ -211,6 +234,7 @@ function delete_button_cb(goal_id) {
         var remove_modal = document.getElementById('remove_modal');
 	
         remove_modal.style.display = "block";
+	console.log(goal_id);
                 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
