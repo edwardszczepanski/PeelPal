@@ -81,6 +81,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				$progress = $progress + 1;
 				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
 				$stmt->execute();
+				//also check if trophies should be updated
+				$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', g_date) < 5;");
+				$stmt->execute();
+				$types = null;
+				$stmt->bind_result($types);
+				$deservesTrophy = True;
+				while($stmt->fetch())(
+					if($types != 'positive'){
+						deservesTrophy = False;
+					});
 				}
 			}
 	}
