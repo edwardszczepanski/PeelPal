@@ -161,6 +161,22 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		}
 ?>
 
+	<?php
+	$stmt = $mysqli -> prepare("SELECT u_id FROM goal WHERE goal_id='$selectedGoal_id';");
+	$stmt -> execute(); 
+	$acc_u_id = null;
+	$stmt -> bind_result($acc_u_id);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_u_id);	
+	?>
+	<?php
+	$stmt = $mysqli -> prepare("SELECT username FROM user WHERE user_id='$acc_u_id';");
+	$stmt -> execute(); 
+	$acc_username = null;
+	$stmt -> bind_result($acc_username);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_username);	
+	?>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -186,6 +202,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+					 <li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
+                    </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
@@ -193,6 +212,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             </div>
         </div>
     </nav>
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $acc_u_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $acc_username; ?>" >
+	</form>
 
     <section id="portfolio" class="bg-light-gray">
 
@@ -559,6 +582,12 @@ function abandon_goal_button_cb() {
         }
     }
 	}
+	</script>
+	<script type="text/JavaScript"language="javascript">
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	}); 
 	</script>
     <script src="js/agency.js"></script>
 

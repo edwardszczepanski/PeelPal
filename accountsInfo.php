@@ -1,25 +1,16 @@
+ <?php
+//start session 
+session_start();
+//check if variable is true, otherwise deny access
+if(!$_SESSION['auth'])
+{
+    header('location:login.php');
+}
+?>
 <?php
 include('oldScaffolding/connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
-?>
-
-<?php
-# Checks if username and userID match in URL. If not, URL was likely manually changed to access
-# a private achievements page. Redirects to logout.
-$stmt = $mysqli -> prepare ("SELECT user_id FROM user WHERE username ='$_GET[username]' AND user_id ='$_GET[userID]';");
-$stmt -> execute();
-$res = null;
-$stmt -> bind_result($res); 
-$stmt->fetch();
-
-if (! $res) { 
-	echo "stop snoopin'";
-	echo '<script type = "text/javascript">
-		window.location="logout.php"
-		</script>';
-}
-$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +22,8 @@ $stmt->close();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
 
-    <title>Peel Pal</title>
+
+    <title>Peel Pages</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -50,24 +42,6 @@ $stmt->close();
 </head>
 
 <body id="page-top" class="index">
-<?php
-# Getting posted variables from goals.php
-$userID=$_GET[userID];
-# echo $_POST['userID'];
-$username = $_GET[username];
-?>
-
-
-	<!-- Facebook Share Button: -->
-	<div id="fb-root"></div>
-	<script>(function(d, s, id) {
-  		var js, fjs = d.getElementsByTagName(s)[0];
-  		if (d.getElementById(id)) return;
-  		js = d.createElement(s); js.id = id;
-  		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
- 		fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	</script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -94,7 +68,7 @@ $username = $_GET[username];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
-					<li>
+                    <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
@@ -105,22 +79,27 @@ $username = $_GET[username];
         </div>
     </nav>
 	<form id="accountForm" method = "POST">
-		<input  type = "hidden" name = "userID" value = "<?php echo $userID; ?>" >
-		<input  type = "hidden" name = "username" value = "<?php echo $username; ?>" >
-
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 	</form>
 
+<?php
+# Getting posted variables from goals.php
+$userID=$_POST['userID'];
+# echo $_POST['userID'];
+$username = $_POST['username'];
 
+?>
 
     <section id="portfolio" class="bg-light-gray">
 
 		<!-- Displaying Achievements header with username -->
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<!--
-				<h1 style = "color: white;" class = "section-heading"> <?php #echo $username ?>: ACHIEVEMENTS </h1>
-				-->				
-				<h1 style = "color: white;" class = "section-heading"> <?php echo $_GET["username"] ?>: ACHIEVEMENTS </h1>
+				<h1 style = "color: white;" class = "section-heading"> <?php echo $username ?>: ACCOUNT INFOMATION</h1>
+			<!--
+				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
+				-->
 			</div>
 		</div>
 
@@ -128,42 +107,47 @@ $username = $_GET[username];
         <div class="container" style=" ">				
 		<div class="row">
 			<div>
-				<!-- Facebook Share Button: -->
-				<center>
-				<div class="fb-share-button" style="margin-bottom:2.6%" data-href="" data-layout="button" data-size="large" data-mobile-iframe="true">
-					<a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fix.cs.uoregon.edu%2F%7Eadeodhar%2FPeelPal%2Fgoals.php&amp;src=sdkpreparse">Share</a>
-				</div>
-				</center>
-				<table class="table table-hover" style="    background-color: white;">
-					<thead>
-					  <tr>
-						<th>Goal</th>
-						<th>End Date</th>
-						<th>Days to Complete</th>
-						<th>Trophies</th>
-						<th></th>
-					  </tr>
-					</thead>
-					<tbody>
-					<?php
-						# Gathering data from database
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal, user WHERE g_state = 1 AND u_id='$_GET[userID]' AND username='$_GET[username]';");
-						$stmt -> execute(); 
-						$goalName = null;
-						$endDate = null;
-						$daysToComplete = null;
-						$trophies = null;	
-						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies);	
-						$stmt -> store_result();
-						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $goalName, $endDate, $daysToComplete, $trophies);		
-					?>
+				<h4>Please edit your account information here</h4 >
+				<form id="accountEditForm" method = "POST">
+					<table class="table table-hover" style="width: 70%;    background-color: white;">
+						
+						<?php
+							# Query database for user-specific achievements (using user_id, not username)
+							$stmt = $mysqli -> prepare("SELECT username, password, email, phone_num FROM user WHERE user_id='$userID';");
+							$stmt -> execute(); 
+							$username = null;
+							$password = null;
+							$email = null;
+							$phone_num = null;	
+							$stmt -> bind_result($username, $password, $email, $phone_num);	
+							$stmt -> store_result();
+							while($stmt->fetch())printf('<tr><td>Username: </td><td><input id ="username" name="username" value="%s"></td></tr><tr><td>Password: </td><td><input type="password" id ="password" name="password" value="%s"></td></tr><tr><td>Email: </td><td><input id ="email" name="email" value="%s"></td></tr><tr><td>Phone: </td><td><input id ="phone_num" name="phone_num" value="%s"></td></tr>', $username, $password, $email, $phone_num);	
+						#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
+						?>
+					</table>
+					<input style="display:none;" id ="userEditID" name="userEditID" value="<?php echo $userID; ?>">					
 
-					</tbody>
-				</table>
+				</form>
+				
+				<button id="editSubmitBtn" class="btn btn-primary">Submit</button>
+				<button id="" class="btn btn-primary" onclick="window.location.replace('goals.php');">Close</button>
+							
 			</div>
 		</div>
       </div>
     </section>
+
+    <!--footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="copyright">Copyright &copy; PeelPal 2017</span>
+                    <a href="#page-top" title="To Top" class="page-scroll" style="padding:10px">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer-->
        
     <script src="js/jquery.js"></script>
 
@@ -178,11 +162,39 @@ $username = $_GET[username];
 
     <script type="text/javascript" src="js/script.js"></script>
 	<script type="text/JavaScript"language="javascript">
-	$(accountBtn).click(function() {
-		document.getElementById("accountForm").action="././accountsInfo.php";
-		document.getElementById("accountForm").submit();
+	var flag;
+	function checkEmpty() {
+		var geta=document.getElementById("username").value;
+		var getb=document.getElementById("password").value;
+		//var getc=document.getElementById("email").value;
+		//var getd=document.getElementById("phone_num").value;
+		flag=1;
+		if(geta == ''){
+			alert("Username can't be empty!");
+			flag=0;
+		}
+		if(getb == ''){
+			alert("Password can't be empty!");
+			flag=0;
+		}
+		/*
+		if(getc == ''){
+			alert("Please type a description!");
+		}
+		if(getd == ''){
+			alert("Please type a description!");
+		} */  	
+	}
+		
+	$(editSubmitBtn).click(function() {
+		checkEmpty();
+		if(flag){
+			document.getElementById("accountEditForm").action="././accountEditHelper.php";
+			document.getElementById("accountEditForm").submit();
+		}
 	});
- 
+
+	
 </script>
 </body>
 
