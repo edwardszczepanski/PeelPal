@@ -69,7 +69,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if($countNum<1){
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
-			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."', update_mark='1' WHERE goal_id='".$selectedGoal_id."';");
 			$stmt ->execute();
 			if($type == 'positive'){
 				/*If type is positive, increment progress value by 1*/
@@ -205,7 +205,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 								    
 			<?php
 			
-			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act, DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate), nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,g.last_act) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.goal_id = $selectedGoal_id; ");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act, DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate), nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.goal_id = $selectedGoal_id; ");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
