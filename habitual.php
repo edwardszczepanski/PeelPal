@@ -23,6 +23,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 <head>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
@@ -199,13 +200,14 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<div class="row">
 			<div class="col-lg-12 text-center">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g_name FROM goal WHERE goal_id=$selectedGoal_id;");
+			$stmt = $mysqli -> prepare("SELECT g_name, trophy FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
 			$top_goal_name=null;
+			$trophies = null;
 					
-			$stmt->bind_result($top_goal_name);
+			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
+			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"/>',$top_goal_name, $trophies);
 			
 			?>
 			</div>
