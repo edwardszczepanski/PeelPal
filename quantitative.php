@@ -78,6 +78,31 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			//update the latest number in database
 			$stmt = $mysqli -> prepare("UPDATE `peelPal`.`target` SET `l_value`='".$add_num."' WHERE `goal_id`='".$selectedGoal_id."';");
 			$stmt->execute();
+			//Get target value for trophy calculation
+			$stmt = $mysqli -> prepare("SELECT t_value FROM peelPal.target WHERE goal_id='".$selectedGoal_id."';");
+			$stmt->execute();
+			$target = null;
+			$stmt->bind_result($target);
+			while($stmt->fetch())printf('',$target);
+			//Get current trophy count
+			$stmt = $mysqli -> prepare("SELECT trophy FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+			$stmt->execute();
+			$t_count = null;
+			while($stmt->fetch())printf('',$t_count);
+			//Calculate current percent and percent for next trophy(this will allow trophies for better than 100% completion)
+			echo $t_count;
+			$c_percent = $add_num/$target;
+			echo $c_percent;
+			$t_percent = ($t_count+1) * .25;
+			//if current percent meets next trophy level, increment trophy count in database
+			if($c_percent >= $t_percent){
+				echo "adding trophy";
+				$t_count = $t_count + 1;
+				echo "adding trophy count ";
+				echo $t_count;
+				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET trophy='".$t_count."' WHERE goal_id='".$selectedGoal_id."';");
+				$stmt->execute();
+			}
 		}
 	}	
 ?> 
