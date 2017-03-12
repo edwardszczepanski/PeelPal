@@ -84,7 +84,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				//also check if trophies should be updated
 				//if it's been 5 days since last trophy added:
 				echo "checking trophy interval";
-				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', IFNULL(last_trophy,SUB_DATE((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY)) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
+				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', IFNULL(last_trophy,SUB_DATE((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY))) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
 				$stmt->execute();
 				$days = null;
 				$stmt->bind_result($days);
@@ -93,7 +93,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				echo " checked trophy interval";
 				if($days >= 5){
 					echo "days too  long";
-					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', (SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."')) <= 5;");
+					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', IFNULL((SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."'),SUB_DATE((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY))) <= 5;");
 					$stmt->execute();
 					$types = null;
 					$stmt->bind_result($types);
