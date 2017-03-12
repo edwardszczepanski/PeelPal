@@ -83,13 +83,17 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				$stmt->execute();
 				//also check if trophies should be updated
 				//if it's been 5 days since last trophy added:
-				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', last_trophy) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
+				echo "checking trophy interval";
+				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', IFNULL(last_trophy,SUB_DATE((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY)) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
 				$stmt->execute();
 				$days = null;
 				$stmt->bind_result($days);
 				while($stmt->fetch())printf('', $days);
+				echo $days;
+				echo " checked trophy interval";
 				if($days >= 5){
-					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', (SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."')) < 5;");
+					echo "days too  long";
+					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', (SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."')) <= 5;");
 					$stmt->execute();
 					$types = null;
 					$stmt->bind_result($types);
@@ -99,7 +103,18 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 							$deservesTrophy = False;
 						}
 					}
-				}
+/*					if($deservesTrophy){
+						//Get current trophy count, increment by 1 and update
+						$stmt = $mysqli -> prepare("SELECT trophy FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+						$stmt -> execute();
+						$t_count = null;
+						$stmt -> bind_result($t_count);
+						while($stmt->fetch())printf('',$t_count);
+						$t_count = $t_count + 1;
+						$stmt = $mysqli -> prepare("UPDATE goal SET trophy='".$t_count."', last_trophy='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+						$stmt -> execute();
+					}
+*/				}
 			}
 		}
 	}
