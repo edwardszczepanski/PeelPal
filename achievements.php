@@ -188,7 +188,7 @@ $username = $_GET[username];
 						while($stmt->fetch()) {
 							printf('<tr id=%s><td>%s</td><td>%s</td><td>%s</td><td>%s</td>', $goal_id, $goalName, $endDate, $daysToComplete, $trophies);	
 							if ($user_id == $res) {
-								printf('<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td>', $goal_id);
+								printf('<td><button class="btn btn-primary" onClick="delete_button_cb(%s)">Delete</button></td>', $goal_id);
 							}
 							printf('</tr>');	
 						}
