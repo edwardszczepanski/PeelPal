@@ -42,12 +42,7 @@ or die ("Connection failed");
 </head>
 
 <body id="page-top" class="index">
-<?php
-# Getting posted variables from goals.php
-$userID=$_POST['userID'];
-# echo $_POST['userID'];
-$username = $_POST['username'];
-?>
+
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -73,7 +68,7 @@ $username = $_POST['username'];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
-					<li>
+                    <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
@@ -84,18 +79,24 @@ $username = $_POST['username'];
         </div>
     </nav>
 	<form id="accountForm" method = "POST">
-		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $userID; ?>" >
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
 		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
-
 	</form>
 
+<?php
+# Getting posted variables from goals.php
+$userID=$_POST['userID'];
+# echo $_POST['userID'];
+$username = $_POST['username'];
+
+?>
 
     <section id="portfolio" class="bg-light-gray">
 
 		<!-- Displaying Achievements header with username -->
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<h1 style = "color: white;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
+				<h1 style = "color: white;" class = "section-heading"> <?php echo $username ?>: ACCOUNT INFOMATION</h1>
 			<!--
 				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
 				-->
@@ -106,33 +107,31 @@ $username = $_POST['username'];
         <div class="container" style=" ">				
 		<div class="row">
 			<div>
-				<table class="table table-hover" style="    background-color: white;">
-					<thead>
-					  <tr>
-						<th>Goal</th>
-						<th>End Date</th>
-						<th>Days to Complete</th>
-						<th>Trophies</th>
-						<th></th>
-					  </tr>
-					</thead>
-					<tbody>
-					<?php
-						# Query database for user-specific achievements (using user_id, not username)
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';");
-						$stmt -> execute(); 
-						$goalName = null;
-						$endDate = null;
-						$daysToComplete = null;
-						$trophies = null;	
-						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies);	
-						$stmt -> store_result();
-						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>', $goalName, $endDate, $daysToComplete, $trophies);	
-					#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
-					?>
+				<h4>Please edit your account information here</h4 >
+				<form id="accountEditForm" method = "POST">
+					<table class="table table-hover" style="width: 70%;    background-color: white;">
+						
+						<?php
+							# Query database for user-specific achievements (using user_id, not username)
+							$stmt = $mysqli -> prepare("SELECT username, password, email, phone_num FROM user WHERE user_id='$userID';");
+							$stmt -> execute(); 
+							$username = null;
+							$password = null;
+							$email = null;
+							$phone_num = null;	
+							$stmt -> bind_result($username, $password, $email, $phone_num);	
+							$stmt -> store_result();
+							while($stmt->fetch())printf('<tr><td>Username: </td><td><input id ="username" name="username" value="%s"></td></tr><tr><td>Password: </td><td><input type="password" id ="password" name="password" value="%s"></td></tr><tr><td>Email: </td><td><input id ="email" name="email" value="%s"></td></tr><tr><td>Phone: </td><td><input id ="phone_num" name="phone_num" value="%s"></td></tr>', $username, $password, $email, $phone_num);	
+						#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
+						?>
+					</table>
+					<input style="display:none;" id ="userEditID" name="userEditID" value="<?php echo $userID; ?>">					
 
-					</tbody>
-				</table>
+				</form>
+				
+				<button id="editSubmitBtn" class="btn btn-primary">Submit</button>
+				<button id="" class="btn btn-primary" onclick="window.location.replace('goals.php');">Close</button>
+							
 			</div>
 		</div>
       </div>
@@ -163,11 +162,39 @@ $username = $_POST['username'];
 
     <script type="text/javascript" src="js/script.js"></script>
 	<script type="text/JavaScript"language="javascript">
-	$(accountBtn).click(function() {
-		document.getElementById("accountForm").action="././accountsInfo.php";
-		document.getElementById("accountForm").submit();
+	var flag;
+	function checkEmpty() {
+		var geta=document.getElementById("username").value;
+		var getb=document.getElementById("password").value;
+		//var getc=document.getElementById("email").value;
+		//var getd=document.getElementById("phone_num").value;
+		flag=1;
+		if(geta == ''){
+			alert("Username can't be empty!");
+			flag=0;
+		}
+		if(getb == ''){
+			alert("Password can't be empty!");
+			flag=0;
+		}
+		/*
+		if(getc == ''){
+			alert("Please type a description!");
+		}
+		if(getd == ''){
+			alert("Please type a description!");
+		} */  	
+	}
+		
+	$(editSubmitBtn).click(function() {
+		checkEmpty();
+		if(flag){
+			document.getElementById("accountEditForm").action="././accountEditHelper.php";
+			document.getElementById("accountEditForm").submit();
+		}
 	});
- 
+
+	
 </script>
 </body>
 

@@ -15,9 +15,7 @@ if(!$_SESSION['auth'])
 <?php
 		$username=$_SESSION['username'];
 		$password=$_SESSION['password'];
-		//$username="tomz";
-		//$password="123456";
-		//echo "username: ".$username."<br>";
+		
 		//validate the username and password
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
 		{
@@ -226,10 +224,13 @@ if(!$_SESSION['auth'])
                         <a class="page-scroll" href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">Home</a>
+                        <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
+                    </li>
+					<li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
@@ -238,6 +239,11 @@ if(!$_SESSION['auth'])
             </div>
         </div>
     </nav>
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
+
+	</form>
 
     <section id="portfolio" class="bg-light-gray">
 
@@ -257,7 +263,7 @@ if(!$_SESSION['auth'])
 	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
 	
 
-	<form id="achievementForm" method = "POST" id="sendForm">
+	<form id="achievementForm" method = "POST">
 		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
 		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 	</form>
@@ -434,10 +440,14 @@ if(!$_SESSION['auth'])
  
 </script>
 <script type="text/JavaScript"language="javascript">
-        $(achievementBtn).click(function() {
-                document.getElementById("achievementForm").action="././achievements.php";
-                document.getElementById("achievementForm").submit();
-        });
+	$(achievementBtn).click(function() {
+		document.getElementById("achievementForm").action="././achievements.php";
+		document.getElementById("achievementForm").submit();
+	});
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	});
  
 </script>
 
