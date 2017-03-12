@@ -184,6 +184,70 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 	<!--edit update modal-->		
 	<div id="edit_myModal" class="modal">
+<<<<<<< HEAD
+            <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Please fill information</h3>
+            <form action="quantitative.php" method="POST" id="sendForm" style="margin-top: 2%;">	
+            	<table class="editUpdate">
+					<tr>
+						<td>
+							<p>Date:	</p>
+						</td>
+						<td>
+							<input type="text" name="edit_date" id="edit_da" readOnly="true" required>
+						</td>
+					</tr>                
+					<tr>
+						<td>
+							<p>Description:	</p>
+						</td>
+						<td>
+							<input type="text" name="edit_des" id="edit_de" required>
+						</td>
+					</tr>                
+					<tr>		
+						<td>
+							<p>Number:	</p>
+						</td>					
+						<td>
+							<input type="text" name="edit_number" id="edit_num" required>
+						</td>								
+					</tr>                				
+					<tr>               
+									
+						<td>
+							<input style="width: 50px; display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
+							<input style="width: 50px; display: none;" type="text" name="contact_Id" id="edit_contact_Id">		
+						</td>					
+						<td>
+							<input class="btn btn-success" type="submit" value="Save" style="float: right;">
+									
+						</td>
+					</tr>				
+                </table>
+            </form>                  
+            </div>
+		</div>	
+    <?php
+	$stmt = $mysqli -> prepare("SELECT u_id FROM goal WHERE goal_id='$selectedGoal_id';");
+	$stmt -> execute(); 
+	$acc_u_id = null;
+	$stmt -> bind_result($acc_u_id);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_u_id);	
+	?>
+	<?php
+	$stmt = $mysqli -> prepare("SELECT username FROM user WHERE user_id='$acc_u_id';");
+	$stmt -> execute(); 
+	$acc_username = null;
+	$stmt -> bind_result($acc_username);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_username);	
+	?>
+	
+	<!-- Navigation -->
+=======
         <div class="modal-content">
         <span class="close">&times;</span>
         <h3>Edit Update</h3><p>Your current number is: <?php echo $l_value;?></p><p>Your target number is: <?php echo $t_value;?></p>
@@ -230,6 +294,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	</div>
 
     <!-- Navigation -->
+>>>>>>> bde10d16240328f5a639791bf8a10f43ddc6a55d
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header page-scroll">
@@ -254,6 +319,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+					 <li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
+                    </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
@@ -261,7 +329,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             </div>
         </div>
     </nav>
-
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $acc_u_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $acc_username; ?>" >
+	</form>
     <section id="portfolio" class="bg-light-gray">
 
     	<!--Load the goal's name-->
@@ -576,6 +647,12 @@ function abandon_goal_button_cb() {
         }
     }
 	}
+	</script>
+	<script type="text/JavaScript"language="javascript">
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	}); 
 	</script>
     <script src="js/agency.js"></script>
 
