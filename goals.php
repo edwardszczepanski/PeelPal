@@ -1,4 +1,4 @@
- <?php
+<?php
 //start session 
 session_start();
 //check if variable is true, otherwise deny access
@@ -15,9 +15,7 @@ if(!$_SESSION['auth'])
 <?php
 		$username=$_SESSION['username'];
 		$password=$_SESSION['password'];
-		//$username="tomz";
-		//$password="123456";
-		//echo "username: ".$username."<br>";
+		
 		//validate the username and password
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
 		{
@@ -226,10 +224,13 @@ if(!$_SESSION['auth'])
                         <a class="page-scroll" href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">Home</a>
+                        <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
+                    </li>
+					<li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
@@ -238,6 +239,11 @@ if(!$_SESSION['auth'])
             </div>
         </div>
     </nav>
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
+
+	</form>
 
     <section id="portfolio" class="bg-light-gray">
 
@@ -257,7 +263,8 @@ if(!$_SESSION['auth'])
 	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
 	
 
-	<form id="achievementForm" method = "POST" id="sendForm">
+
+	<form id="achievementForm" method = "GET" id="sendForm">
 		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $user_id; ?>" >
 		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 	</form>
@@ -273,7 +280,7 @@ if(!$_SESSION['auth'])
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,g.last_act) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");			
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");			
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
@@ -433,12 +440,17 @@ if(!$_SESSION['auth'])
 	});
  
 </script>
+
 <script type="text/JavaScript"language="javascript">
-        $(achievementBtn).click(function() {
-                document.getElementById("achievementForm").action="././achievements.php";
-                document.getElementById("achievementForm").submit();
-        });
- 
+	$(achievementBtn).click(function() {
+		document.getElementById("achievementForm").action="././achievements.php";
+		document.getElementById("achievementForm").submit();
+	});
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	});
+
 </script>
 
     <script src="js/jquery.js"></script>

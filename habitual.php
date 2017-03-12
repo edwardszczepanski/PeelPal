@@ -69,7 +69,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		if($countNum<1){
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`contribution` (`description`, `evaluate`, `g_date`, `g_id`) VALUES ('".$description."','".$type."','".$today."','".$selectedGoal_id."');");
 			$stmt->execute();
-			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+			$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET last_act='".$today."', update_mark='1' WHERE goal_id='".$selectedGoal_id."';");
 			$stmt ->execute();
 			if($type == 'positive'){
 				/*If type is positive, increment progress value by 1*/
@@ -127,6 +127,22 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		}
 ?>
 
+	<?php
+	$stmt = $mysqli -> prepare("SELECT u_id FROM goal WHERE goal_id='$selectedGoal_id';");
+	$stmt -> execute(); 
+	$acc_u_id = null;
+	$stmt -> bind_result($acc_u_id);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_u_id);	
+	?>
+	<?php
+	$stmt = $mysqli -> prepare("SELECT username FROM user WHERE user_id='$acc_u_id';");
+	$stmt -> execute(); 
+	$acc_username = null;
+	$stmt -> bind_result($acc_username);	
+	$stmt -> store_result();	
+	while($stmt->fetch())printf('', $acc_username);	
+	?>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -152,6 +168,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+					 <li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
+                    </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
@@ -159,6 +178,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             </div>
         </div>
     </nav>
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $acc_u_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $acc_username; ?>" >
+	</form>
 
     <section id="portfolio" class="bg-light-gray">
 
@@ -182,7 +205,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 								    
 			<?php
 			
-			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act, DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate), nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,g.last_act) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,goal.last_act) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.goal_id = $selectedGoal_id; ");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act, DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate), nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.goal_id = $selectedGoal_id; ");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
@@ -524,6 +547,12 @@ function abandon_goal_button_cb() {
         }
     }
 	}
+	</script>
+	<script type="text/JavaScript"language="javascript">
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	}); 
 	</script>
     <script src="js/agency.js"></script>
 

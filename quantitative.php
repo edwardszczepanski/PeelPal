@@ -14,10 +14,12 @@ if(!$_SESSION['auth'])
  ?>
 
 <?php 
-//echo '->'.$_POST['selectedGoal_id'].'<br>';
+//get the goal_id from the goal.php page
 $selectedGoal_id=$_POST['selectedGoal_id'];
 
-?>	
+?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,24 +51,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 
 <body id="page-top" class="index">
+
+<!--add update-->
 <?php		
+	//get the info. that the user filled
 	$add_date = $_POST['add_date'];			
 	$add_des = $_POST['add_des'];			
 	$add_num = $_POST['add_num'];	
 	$selectedGoal_id=$_POST['selectedGoal_id'];
-		
-	//$add_email = $_POST['add_email'];			
-	//$add_address1 = $_POST['add_address1'];			
-	//$add_address2 = $_POST['add_address2'];			
-	//$add_city = $_POST['add_city'];			
-	//$add_state = $_POST['add_state'];			
-	//$add_zip = $_POST['add_zip'];			
-	//	$addId = $_POST['addId'];
 	
-	
-	if((!empty($add_date))||(!empty($add_des))){			
-		
-		
+	if((!empty($add_date))||(!empty($add_des))){	
 		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.updateprog u WHERE (u.description ='".$add_des."') AND (u.evaluate_num ='".$add_num."') AND (u.date ='".$add_date."') AND (u.goal_id ='".$selectedGoal_id."');");
 		$stmt->execute();
 		$countNum=null;
@@ -74,19 +68,21 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		while($stmt->fetch())printf('',$countNum);			
 		
 		if($countNum<1)
-		{			
+		{	
+			//insert update info into database		
 			$stmt = $mysqli -> prepare("INSERT INTO `peelPal`.`updateprog` (`description`, `evaluate_num`, `date`, `goal_id`) VALUES ('".$add_des."','".$add_num."','".$add_date."','".$selectedGoal_id."');");
 			$stmt->execute();
-
-		//$nihao = UPDATE `peelPal`.`goal` SET `last_act`='2017-02-05' WHERE `goal_id`='5';
+			//update the last update date in database
 			$stmt = $mysqli -> prepare("UPDATE `peelPal`.`goal` SET `last_act`='".$add_date."' WHERE `goal_id`='".$selectedGoal_id."';");
 			$stmt->execute();
-			
+			//update the latest number in database
 			$stmt = $mysqli -> prepare("UPDATE `peelPal`.`target` SET `l_value`='".$add_num."' WHERE `goal_id`='".$selectedGoal_id."';");
 			$stmt->execute();
 		}
 	}	
 ?> 
+
+<!--edit update-->
 <?php		
 	$edit_date = $_POST['edit_date'];			
 	$edit_des = $_POST['edit_des'];			
@@ -94,15 +90,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 	$selectedGoal_id=$_POST['selectedGoal_id'];
 	$upgr_id= $_POST['contact_Id'];
 		
-	//$add_email = $_POST['add_email'];			
-	//$add_address1 = $_POST['add_address1'];			
-	//$add_address2 = $_POST['add_address2'];			
-	//$add_city = $_POST['add_city'];			
-	//$add_state = $_POST['add_state'];			
-	//$add_zip = $_POST['add_zip'];			
-	//	$addId = $_POST['addId'];
-	
-	
 	if((!empty($edit_date))||(!empty($edit_des))){			
 		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.updateprog u WHERE u.up_id ='".$upgr_id."';");
 		$stmt->execute();
@@ -111,23 +98,23 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		while($stmt->fetch())printf('',$countNum);	
 				
 		if($countNum==1)
-		{			
+		{	
+			//update the update_info. in database
 			$stmt = $mysqli -> prepare("UPDATE `peelPal`.`updateprog` SET `description`='".$edit_des."', `evaluate_num`='".$edit_num."', `date`='".$edit_date."' WHERE `up_id`='".$upgr_id."'; ");
 			$stmt->execute();
 			
-			
+			//get the current goal's last update's date
 			$stmt = $mysqli -> prepare("SELECT last_act FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."'; ");
 			$stmt->execute();
 			$edit_ls=null;
 			$stmt->bind_result($edit_ls);				
-			while($stmt->fetch())printf('',$edit_ls);
+			while($stmt->fetch())printf('',$edit_ls);			
+			echo"<script>alert(wusuowei);</script>";		
 			
-			echo"<script>alert(wusuowei);</script>";
-			
-			//echo 
-			
+			//check the update update's date is the last update's date or not
 			if($edit_date == $edit_ls)
 			{
+				//update the last update's date for the current goal
 				$stmt = $mysqli -> prepare("UPDATE `peelPal`.`target` SET `l_value`='".$edit_num."' WHERE `goal_id`='".$selectedGoal_id."'; ");
 				$stmt->execute();
 			}	
@@ -135,98 +122,130 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 		}
 	}	
-?>   
+?>
+
+<!--load the targetnumber and latest number-->
+<?php
+	$selectedGoal_id=$_POST['selectedGoal_id'];
+	$stmt = $mysqli -> prepare("SELECT t_value, s_value, l_value FROM target WHERE goal_id=$selectedGoal_id;");
+	$stmt->execute();
+	$t_value=null;
+	$s_value=null;
+	$l_value=null;
+
+	$stmt->bind_result($t_value, $s_value, $l_value);
+	$stmt->store_result();
+	while($stmt->fetch())printf('',$t_value, $s_value, $l_value);
+?>
+	<!--add update modal-->
 	<div id="myModal" class="modal">
-				<!-- Modal content -->
-				<div class="modal-content">
-					<span id="add_close" class="close">&times;</span>
-					<h3>Add Update</h3>
-					<form action="quantitative.php" method="POST" id="senddForm" style="margin-top: 2%;">	
-						<table class="addUpdate">
-							<tr>
-								<td>
-									<p>Date:	</p>
-								</td>
-								<td>
-									<input type="date" name="add_date" id="add_date" required>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p>Description:	</p>
-								</td>
-								<td>
-									<input type="text" name="add_des" id="add_des" required>
+		<!-- Modal content -->
+		<div class="modal-content">
+		<span id="add_close" class="close">&times;</span>
+		<h3>Add Update</h3><p>Your current number is: <?php echo $l_value;?></p><p>Your target number is: <?php echo $t_value;?></p>
+		<form action="quantitative.php" method="POST" id="senddForm" style="margin-top: 2%;">	
+			<table class="addUpdate">
+				<tr>
+					<td>
+						<p>Date:	</p>
+					</td>
+					<td>
+						<input type="date" name="add_date" id="add_date" required>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Description:	</p>
+					</td>
+					<td>
+						<input type="text" name="add_des" id="add_des" required>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Number:	</p>
+					</td>
+					<td>
+						<input type="text" name="add_num" id="add_num" required>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input style="display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">								
+					</td>
+					<td>
+						<input class="btn btn-success" type="button" value="Save" style="float: right;" onclick="checkDate()">											
+					</td>
+				</tr>
+			</table>
+		</form> 
+		</div>
+	</div>
 
-							</tr>
-							<tr>
-								<td>
-									<p>Number:	</p>
-								</td>
-								<td>
-									<input type="text" name="add_num" id="add_num" required>
-								</td>
-							</tr>
-
-							<tr>
-								
-								<td>
-									<input style="display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">								
-								</td>
-								<td>
-									<input class="btn btn-success" type="button" value="Save" style="float: right;" onclick="checkDate()">
-											
-								</td>
-							</tr>
-						</table>
-					</form> 
-				</div>
-			</div>
+	<!--edit update modal-->
 	<div id="edit_myModal" class="modal">
-            <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Please fill information</h3>
-            <form action="quantitative.php" method="POST" id="sendForm" style="margin-top: 2%;">	
-            	<table class="editUpdate">
-					<tr>
-						<td>
-							<p>Date:	</p>
-						</td>
-						<td>
-							<input type="text" name="edit_date" id="edit_da" readOnly="true" required>
-						</td>
-					</tr>                
-					<tr>
-						<td>
-							<p>Description:	</p>
-						</td>
-						<td>
-							<input type="text" name="edit_des" id="edit_de" required>
-						</td>
-					</tr>                
-					<tr>		
-						<td>
-							<p>Number:	</p>
-						</td>					
-						<td>
-							<input type="text" name="edit_number" id="edit_num" required>
-						</td>								
-					</tr>                				
-					<tr>               
-									
-						<td>
-							<input style="width: 50px; display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
-							<input style="width: 50px; display: none;" type="text" name="contact_Id" id="edit_contact_Id">		
-						</td>					
-						<td>
-							<input class="btn btn-success" type="submit" value="Save" style="float: right;">
-									
-						</td>
-					</tr>				
-                </table>
-            </form>                  
-            </div>
-		</div>	
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Update</h3><p>Your current number is: <?php echo $l_value;?></p><p>Your target number is: <?php echo $t_value;?></p>
+        <form action="quantitative.php" method="POST" id="sendForm" style="margin-top: 2%;">	
+        	<table class="editUpdate">
+				<tr>
+					<td>
+						<p>Date:	</p>
+					</td>
+					<td>
+						<input type="text" name="edit_date" id="edit_da" readOnly="true" required>
+					</td>
+				</tr>                
+				<tr>
+					<td>
+						<p>Description:	</p>
+					</td>
+					<td>
+						<input type="text" name="edit_des" id="edit_de" required>
+					</td>
+				</tr>                
+				<tr>		
+					<td>
+						<p>Number:	</p>
+					</td>					
+					<td>
+						<input type="text" name="edit_number" id="edit_num" required>
+					</td>								
+				</tr>                				
+				<tr>               
+								
+					<td>
+						<input style="width: 50px; display: none;" type="text" name="selectedGoal_id" value="<?php echo $selectedGoal_id;?>">
+						<input style="width: 50px; display: none;" type="text" name="contact_Id" id="edit_contact_Id">		
+					</td>					
+					<td>
+						<input class="btn btn-success" type="submit" value="Save" style="float: right;">
+								
+					</td>
+				</tr>				
+            </table>
+        </form>                  
+        </div>
+	</div>	
+	
+<?php
+$stmt = $mysqli -> prepare("SELECT u_id FROM goal WHERE goal_id='$selectedGoal_id';");
+$stmt -> execute(); 
+$acc_u_id = null;
+$stmt -> bind_result($acc_u_id);	
+$stmt -> store_result();	
+while($stmt->fetch())printf('', $acc_u_id);	
+?>
+<?php
+$stmt = $mysqli -> prepare("SELECT username FROM user WHERE user_id='$acc_u_id';");
+$stmt -> execute(); 
+$acc_username = null;
+$stmt -> bind_result($acc_username);	
+$stmt -> store_result();	
+while($stmt->fetch())printf('', $acc_username);	
+?>
+	
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -252,6 +271,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+					 <li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
+                    </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
@@ -259,35 +281,35 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             </div>
         </div>
     </nav>
-
+	<form id="accountForm" method = "POST">
+		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $acc_u_id; ?>" >
+		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $acc_username; ?>" >
+	</form>
     <section id="portfolio" class="bg-light-gray">
 
+    	<!--Load the goal's name-->
 		<div class="row">
 			<div class="col-lg-12 text-center">
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt = $mysqli -> prepare("SELECT g_name FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
-			$top_goal_name=null;
-					
+			$top_goal_name=null;		
 			$stmt->bind_result($top_goal_name);
 			$stmt->store_result();
 			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
-			
 			?>
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">		
-		<div class="row">			
-								    
+		<!--Load the progress bar-->
+		<div class="row">								    
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt = $mysqli -> prepare("SELECT ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.goal_id = $selectedGoal_id");
 			$stmt->execute();
-		
 			$tar_diff=null;		
-			//$tmpTotal=null;		
 			$stmt->bind_result( $tar_diff);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
@@ -300,13 +322,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					  </div>
                   </div>
               </div>
-			  ',$tar_diff*100);
-			  
+			  ',$tar_diff*100);			  
 			  ?>
-
-			
 		</div>
-		
+		<!--Load the goal's update information-->
 		<div class="row">
 			<div>
 				<table id="getDate" class="table table-hover" style="    background-color: white;">
@@ -341,10 +360,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					</tbody>
 				</table>
 			</div>
-			
-      
-		
 		</div>
+		<!--add update, mark as complete, abandon goal buttons-->
 		<button id="myBtn" type="button" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD UPDATE</button>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
@@ -408,20 +425,22 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 </div>
 
 <script type="text/JavaScript"language="javascript">
+	//validate the information input in add new update modal by user
 	function checkDate() {
+     	// Get the typed information
 		var getb=document.getElementById("add_date").value;
 		var geta=document.getElementById("add_des").value;
 		var getd=document.getElementById("add_num").value;
 
-		if(getb.length != 10){
-			alert("Please type date like this format: YYYY-MM-DD!");
-		}
+		// Check user type a description or not
 		if(geta == ''){
 			alert("Please type a description!");
 		}
+		// Check user type a number as number or not
 		if((isNaN(getd)) || getd == ''){
 			alert("Please type a number!");
 		}
+		// Check user select a date already exits or not
 		if(getb.length == 10 && geta !='' && getd !=''){
 			var getc = '<p>' + getb + '</p>';
 			var tb=document.getElementById("getDate");
@@ -508,14 +527,9 @@ function abandon_goal_button_cb() {
     <script src="js/cbpAnimatedHeader.js"></script>
 	<script type="text/JavaScript"language="javascript">
 	$(function(){
-	//create contact modal
-    // Get the modal
-    
-
     // When the user clicks the button, open the modal
     // When the user clicks on <span> (x), close the modal
-    //var modal = document.getElementById('myModal');
-    
+    //var modal = document.getElementById('myModal');  
     $(edit_contact).click(function() {
         var $contact_id_val = $(this).prev().val();
         //alert($contact_id_val);
@@ -550,7 +564,6 @@ function abandon_goal_button_cb() {
     modal.style.display = "block";
     
     // When the user clicks on <span> (x), close the modal
-    //var modal = document.getElementById('myModal');
 	span.onclick = function() {
         var modal = document.getElementById('myModal');
         modal.style.display = "none";
@@ -558,7 +571,6 @@ function abandon_goal_button_cb() {
     window.onclick = function(event) {
         if (event.target == modal ) {
             modal.style.display = "none";
-            //edit_modal.style.display = "none";
         }
     }
 	}
@@ -573,9 +585,7 @@ function abandon_goal_button_cb() {
     // Get the <span> element that closes the modal
     var edit_span = document.getElementsByClassName("close")[1];
     // When the user clicks the button, open the modal
-    //edit_btn.onclick = function() {
     edit_modal.style.display = "block";
-    //}
     // When the user clicks on <span> (x), close the modal
     edit_span.onclick = function() {
         edit_modal.style.display = "none";
@@ -589,6 +599,12 @@ function abandon_goal_button_cb() {
         }
     }
 	}
+	</script>
+	<script type="text/JavaScript"language="javascript">
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	}); 
 	</script>
     <script src="js/agency.js"></script>
 

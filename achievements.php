@@ -14,6 +14,24 @@ $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
 ?>
 
+<?php
+# Checks if username and userID match in URL. If not, URL was likely manually changed to access
+# a private achievements page. Redirects to logout.
+$stmt = $mysqli -> prepare ("SELECT user_id FROM user WHERE username ='$_GET[username]' AND user_id ='$_GET[userID]';");
+$stmt -> execute();
+$res = null;
+$stmt -> bind_result($res); 
+$stmt->fetch();
+
+if (! $res) { 
+	echo "stop snoopin'";
+	echo '<script type = "text/javascript">
+		window.location="logout.php"
+		</script>';
+}
+$stmt->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head style="background-color: #ffcc10">
@@ -23,8 +41,7 @@ or die ("Connection failed");
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
 
-
-    <title>Peel Pages</title>
+    <title>Peel Pal</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -43,6 +60,24 @@ or die ("Connection failed");
 </head>
 
 <body id="page-top" class="index">
+<?php
+# Getting posted variables from goals.php
+$userID=$_GET[userID];
+# echo $_POST['userID'];
+$username = $_GET[username];
+?>
+
+
+	<!-- Facebook Share Button: -->
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+  		var js, fjs = d.getElementsByTagName(s)[0];
+  		if (d.getElementById(id)) return;
+  		js = d.createElement(s); js.id = id;
+  		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+ 		fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -69,6 +104,9 @@ or die ("Connection failed");
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
+					<li>
+                        <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
+                    </li>
                     <li>
                     	<a class="page-scroll" href="logout.php">Logout</a>
                     </li>
@@ -76,23 +114,23 @@ or die ("Connection failed");
             </div>
         </div>
     </nav>
+	<form id="accountForm" method = "POST">
+		<input  type = "hidden" name = "userID" value = "<?php echo $userID; ?>" >
+		<input  type = "hidden" name = "username" value = "<?php echo $username; ?>" >
 
-<?php
-# Getting posted variables from goals.php
-$userID=$_POST['userID'];
-# echo $_POST['userID'];
-$username = $_POST['username'];
-?>
+	</form>
+
+
 
     <section id="portfolio" class="bg-light-gray">
 
 		<!-- Displaying Achievements header with username -->
 		<div class="row">
 			<div class="col-lg-12 text-center">
-				<h1 style = "color: white;" class = "section-heading"> <?php echo $username ?>: ACHIEVEMENTS </h1>
-			<!--
-				<h1 style = "color: white; text-align: center;" class = "section-heading"> ACHIEVEMENTS </h1>
-				-->
+				<!--
+				<h1 style = "color: white;" class = "section-heading"> <?php #echo $username ?>: ACHIEVEMENTS </h1>
+				-->				
+				<h1 style = "color: white;" class = "section-heading"> <?php echo $_GET["username"] ?>: ACHIEVEMENTS </h1>
 			</div>
 		</div>
 
@@ -100,6 +138,12 @@ $username = $_POST['username'];
         <div class="container" style=" ">				
 		<div class="row">
 			<div>
+				<!-- Facebook Share Button: -->
+				<center>
+				<div class="fb-share-button" style="margin-bottom:2.6%" data-href="" data-layout="button" data-size="large" data-mobile-iframe="true">
+					<a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fix.cs.uoregon.edu%2F%7Eadeodhar%2FPeelPal%2Fgoals.php&amp;src=sdkpreparse">Share</a>
+				</div>
+				</center>
 				<table class="table table-hover" style="    background-color: white;">
 					<thead>
 					  <tr>
@@ -112,20 +156,19 @@ $username = $_POST['username'];
 					</thead>
 					<tbody>
 					<?php
-						# Query database for user-specific achievements (using user_id, not username)
-						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy, goal_id FROM goal WHERE g_state = 1 AND u_id='$userID';");
+						# Gathering data from database
+						$stmt = $mysqli -> prepare("SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy, goal_id FROM goal, user WHERE g_state = 1 AND u_id='$_GET[userID]' AND username='$_GET[username]';");
 						$stmt -> execute(); 
 						$goalName = null;
 						$endDate = null;
 						$daysToComplete = null;
 						$trophies = null;	
-						$goalId = null;
-						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goalId);	
+						$goal_id = null;
+						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goal_idd);	
 						$stmt -> store_result();
 						while($stmt->fetch())printf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td>
-						<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td></tr>	
-						', $goalName, $endDate, $daysToComplete, $trophies, $goalId);	
-					#echo "SELECT g_name, endDate, DATEDIFF(endDate, startDate), trophy FROM goal WHERE g_state = 1 AND u_id='$userID';";
+						<td><button class="btn btn-info" onClick="delete_button_cb(%s)">Delete</button></td></tr>
+						', $goalName, $endDate, $daysToComplete, $trophies, $goal_id);	
 					?>
 
 					</tbody>
@@ -214,6 +257,13 @@ function delete_button_cb(goal_id) {
     <script src="js/agency.js"></script>
 
     <script type="text/javascript" src="js/script.js"></script>
+	<script type="text/JavaScript"language="javascript">
+	$(accountBtn).click(function() {
+		document.getElementById("accountForm").action="././accountsInfo.php";
+		document.getElementById("accountForm").submit();
+	});
+ 
+</script>
 </body>
 
 </html>
