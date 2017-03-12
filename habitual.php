@@ -82,15 +82,24 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
 				$stmt->execute();
 				//also check if trophies should be updated
-				$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', g_date) < 5;");
+				//if it's been 5 days since last trophy added:
+				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', last_trophy) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
 				$stmt->execute();
-				$types = null;
-				$stmt->bind_result($types);
-				$deservesTrophy = True;
-				while($stmt->fetch())(
-					if($types != 'positive'){
-						deservesTrophy = False;
-					});
+				$days = null;
+				$stmt->bind_result($days);
+				while($stmt->fetch())printf('', $days);
+				if($days >= 5){
+					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', (SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."')) < 5;");
+					$stmt->execute();
+					$types = null;
+					$stmt->bind_result($types);
+					$deservesTrophy = True;
+					while($stmt->fetch())(
+						if($types != 'positive'){
+							deservesTrophy = False;
+						}
+					);
+				}
 				}
 			}
 	}
