@@ -90,19 +90,20 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			$t_count = null;
 			$stmt->bind_result($t_count);
 			while($stmt->fetch())printf('',$t_count);
-			//Calculate current percent and percent for next trophy(this will allow trophies for better than 100% completion)
-			echo $t_count;
-			$c_percent = $add_num/$target;
-			echo $c_percent;
-			$t_percent = ($t_count+1) * .25;
+			//Calculate current percent and percent for next trophy(no trophies given above 75%)
+			if($t_count < 3){
+				$c_percent = $add_num/$target;
+				echo $c_percent;
+				$t_percent = ($t_count+1) * .25;
 			//if current percent meets next trophy level, increment trophy count in database
-			if($c_percent >= $t_percent){
-				echo "adding trophy";
-				$t_count = $t_count + 1;
-				echo "adding trophy count ";
-				echo $t_count;
-				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET trophy='".$t_count."' WHERE goal_id='".$selectedGoal_id."';");
-				$stmt->execute();
+				if($c_percent >= $t_percent){
+					echo "adding trophy";
+					$t_count = $t_count + 1;
+					echo "adding trophy count ";
+					echo $t_count;
+					$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET trophy='".$t_count."' WHERE goal_id='".$selectedGoal_id."';");
+					$stmt->execute();
+				}
 			}
 		}
 	}	

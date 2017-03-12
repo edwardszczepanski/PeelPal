@@ -94,14 +94,14 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					$types = null;
 					$stmt->bind_result($types);
 					$deservesTrophy = True;
-					while($stmt->fetch())(
+					while($stmt->fetch()){
 						if($types != 'positive'){
-							deservesTrophy = False;
+							$deservesTrophy = False;
 						}
-					);
-				}
+					}
 				}
 			}
+		}
 	}
 
 	/*If editing a contribution: */
