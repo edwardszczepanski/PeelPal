@@ -277,7 +277,7 @@ if(!$_SESSION['auth'])
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");			
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, (CASE g.last_act WHEN '0000-00-00' THEN 'N/A' ELSE g.last_act END) AS last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");			
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
@@ -317,7 +317,7 @@ if(!$_SESSION['auth'])
 
 			
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,g.last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.g_state=0 AND g.u_id=$user_id;");
+			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,(CASE g.last_act WHEN '0000-00-00' THEN 'N/A' ELSE g.last_act END) AS last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.g_state=0 AND g.u_id=$user_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
