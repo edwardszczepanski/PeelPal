@@ -10,7 +10,7 @@ use this user_id to compare to the user_id in the AJAX URL to see if the current
 logged in person is viewing their own achievements page or someone else's
  */
 
-include('oldScaffolding/connectionData.txt');
+include('./connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
 
