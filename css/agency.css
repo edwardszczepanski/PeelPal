@@ -22,6 +22,10 @@ h6 {
     content: ""
 }
 
+.container {
+    padding: 0% 7% !important;
+}
+
 body {
     overflow-x: hidden;
     font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;

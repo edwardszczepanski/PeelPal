@@ -8,7 +8,7 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php 
- include('oldScaffolding/connectionData.txt');
+ include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
  ?>
@@ -199,9 +199,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     <li>
                         <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Dashboard</a>
-                    </li>
 					 <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
@@ -222,6 +219,26 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<div class="row">
 			<div class="col-lg-12 text-center">
 			<?php
+			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, g.last_act, DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate), nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal left join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.goal_id = $selectedGoal_id; ");
+			$stmt->execute();
+			$goal_id=null;
+			$goal_name=null;
+			$goal_type=null;		
+			$last_act=null;		
+			$last_day=null;		
+			$first_day=null;
+			$day_diff=null;	
+
+			$num_progress=null;		
+			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress, $day_diff);
+			$stmt->store_result();
+			while($stmt->fetch())printf('',$day_diff, $num_progress);
+			
+			if($num_progress == ''){
+			$num_progress = 0;
+			}
+			?>
+			<?php
 			$stmt = $mysqli -> prepare("SELECT g_name, trophy FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
 			$top_goal_name=null;
@@ -229,9 +246,29 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 					
 			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"></i>',$top_goal_name, $trophies);
+			while($stmt->fetch())printf('',$top_goal_name, $trophies);
 			
 			?>
+
+			<h1 style="color: white;" class="section-heading"><?php echo $top_goal_name ?></h1><h3>Trophies: 
+			<?php
+			if($trophies <= 4 && $trophies > 0){
+			for ($x = 0; $x <= $trophies - 1; $x++) {
+  				echo "<i class='fa fa-trophy'></i>";
+  				} 
+			}
+			else if($trophies == 0){
+				echo "N/A";
+			}
+			else{
+				echo $trophies;
+				echo " ";
+				echo x;
+				echo " ";
+				echo "<i class='fa fa-trophy'></i>";
+			}
+			?>
+			<h4>GOAL STATE: <?php echo $num_progress ?>/<?php echo $day_diff + 1 ?></h4>
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        

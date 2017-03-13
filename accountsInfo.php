@@ -8,7 +8,7 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php
-include('oldScaffolding/connectionData.txt');
+include('./connectionData.txt');
 $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
 or die ("Connection failed");
 ?>
@@ -66,9 +66,6 @@ or die ("Connection failed");
                         <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#portfolio">Dashboard</a>
-                    </li>
-                    <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
@@ -109,7 +106,7 @@ $username = $_POST['username'];
 			<div>
 				<h4>Please edit your account information here</h4 >
 				<form id="accountEditForm" method = "POST">
-					<table class="table table-hover" style="width: 70%;    background-color: white;">
+					<table class="table table-hover" style="background-color: white;">
 						
 						<?php
 							# Query database for user-specific achievements (using user_id, not username)

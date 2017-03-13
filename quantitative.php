@@ -8,7 +8,7 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php 
- include('oldScaffolding/connectionData.txt');
+ include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
  ?>
@@ -296,9 +296,6 @@ while($stmt->fetch())printf('', $acc_username);
                     <li>
                         <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Dashboard</a>
-                    </li>
 		    <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
@@ -327,8 +324,22 @@ while($stmt->fetch())printf('', $acc_username);
 			$trophies = null;
 			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"></i>',$top_goal_name, $trophies);
+			while($stmt->fetch())printf('',$top_goal_name, $trophies);
 			?>
+			<h1 style="color: white;" class="section-heading"><?php echo $top_goal_name ?></h1><h3>Trophies:
+			<?php  
+			
+			if($trophies == 0)
+			{
+			echo "N/A";
+			//echo "<i class='fa fa-trophy'></i>";
+			}
+			for ($x = 0; $x <= $trophies - 1; $x++) {
+  				echo "<i class='fa fa-trophy'></i>";
+  				} 
+			?>
+			</h3>
+			<h4>GOAL STATE: <?php echo $l_value ?>/<?php echo $t_value ?></h4>
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
