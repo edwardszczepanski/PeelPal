@@ -8,7 +8,7 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php 
- include('oldScaffolding/connectionData.txt');
+ include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
  ?>
