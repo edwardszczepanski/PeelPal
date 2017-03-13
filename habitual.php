@@ -8,7 +8,7 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php 
- include('oldScaffolding/connectionData.txt');
+ include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
  ?>
@@ -198,9 +198,6 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
                     </li>
                     <li>
                         <a class="page-scroll" href="././goals.php">Home</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
 					 <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
