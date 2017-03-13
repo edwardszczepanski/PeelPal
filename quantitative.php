@@ -78,6 +78,33 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			//update the latest number in database
 			$stmt = $mysqli -> prepare("UPDATE `peelPal`.`target` SET `l_value`='".$add_num."' WHERE `goal_id`='".$selectedGoal_id."';");
 			$stmt->execute();
+			//Get target value for trophy calculation
+			$stmt = $mysqli -> prepare("SELECT t_value FROM peelPal.target WHERE goal_id='".$selectedGoal_id."';");
+			$stmt->execute();
+			$target = null;
+			$stmt->bind_result($target);
+			while($stmt->fetch())printf('',$target);
+			//Get current trophy count
+			$stmt = $mysqli -> prepare("SELECT trophy FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+			$stmt->execute();
+			$t_count = null;
+			$stmt->bind_result($t_count);
+			while($stmt->fetch())printf('',$t_count);
+			//Calculate current percent and percent for next trophy(no trophies given above 75%)
+			if($t_count < 3){
+				$c_percent = $add_num/$target;
+				echo $c_percent;
+				$t_percent = ($t_count+1) * .25;
+			//if current percent meets next trophy level, increment trophy count in database
+				if($c_percent >= $t_percent){
+					echo "adding trophy";
+					$t_count = $t_count + 1;
+					echo "adding trophy count ";
+					echo $t_count;
+					$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET trophy='".$t_count."' WHERE goal_id='".$selectedGoal_id."';");
+					$stmt->execute();
+				}
+			}
 		}
 	}	
 ?> 
@@ -182,7 +209,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		</div>
 	</div>
 
-	<!--edit update modal-->
+	<!--edit update modal-->		
 	<div id="edit_myModal" class="modal">
         <div class="modal-content">
         <span class="close">&times;</span>
@@ -227,8 +254,9 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
             </table>
         </form>                  
         </div>
-	</div>	
-	
+	</div>
+
+<!--Account information-->
 <?php
 $stmt = $mysqli -> prepare("SELECT u_id FROM goal WHERE goal_id='$selectedGoal_id';");
 $stmt -> execute(); 
@@ -271,7 +299,7 @@ while($stmt->fetch())printf('', $acc_username);
                     <li>
                         <a class="page-scroll" href="#portfolio">Dashboard</a>
                     </li>
-					 <li>
+		    <li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
                     <li>
@@ -285,6 +313,7 @@ while($stmt->fetch())printf('', $acc_username);
 		<input style = "display: block" type = "hidden" name = "userID" value = "<?php echo $acc_u_id; ?>" >
 		<input style = "display: block" type = "hidden" name = "username" value = "<?php echo $acc_username; ?>" >
 	</form>
+
     <section id="portfolio" class="bg-light-gray">
 
     	<!--Load the goal's name-->
@@ -292,12 +321,13 @@ while($stmt->fetch())printf('', $acc_username);
 			<div class="col-lg-12 text-center">
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
-			$stmt = $mysqli -> prepare("SELECT g_name FROM goal WHERE goal_id=$selectedGoal_id;");
+			$stmt = $mysqli -> prepare("SELECT g_name, trophy FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
-			$top_goal_name=null;		
-			$stmt->bind_result($top_goal_name);
+			$top_goal_name=null;
+			$trophies = null;
+			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
+			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"></i>',$top_goal_name, $trophies);
 			?>
 			</div>
 		</div>

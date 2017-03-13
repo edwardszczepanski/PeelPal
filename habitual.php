@@ -81,8 +81,42 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				$progress = $progress + 1;
 				$stmt = $mysqli -> prepare("UPDATE peelPal.goal SET progress='".$progress."' WHERE goal_id='".$selectedGoal_id."';");
 				$stmt->execute();
+				//also check if trophies should be updated
+				//if it's been 5 days since last trophy added:
+				echo "checking trophy interval";
+				$stmt = $mysqli -> prepare("SELECT DATEDIFF('".$today."', IFNULL(last_trophy,DATE_SUB((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY))) FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."';");
+				$stmt->execute();
+				$days = null;
+				$stmt->bind_result($days);
+				while($stmt->fetch())printf('', $days);
+				echo $days;
+				echo " checked trophy interval";
+				if($days >= 5){
+					echo "days too  long";
+					$stmt = $mysqli -> prepare("SELECT evaluate FROM peelPal.contribution WHERE DATEDIFF('".$today."', IFNULL((SELECT last_trophy FROM peelPal.goal WHERE goal_id = '".$selectedGoal_id."'),DATE_SUB((SELECT startDate FROM goal WHERE goal_id='".$selectedGoal_id."'), INTERVAL 1 DAY))) <= 5;");
+					$stmt->execute();
+					$types = null;
+					$stmt->bind_result($types);
+					$deservesTrophy = True;
+					while($stmt->fetch()){
+						if($types != 'positive'){
+							$deservesTrophy = False;
+						}
+					}
+					if($deservesTrophy){
+						//Get current trophy count, increment by 1 and update
+						$stmt = $mysqli -> prepare("SELECT trophy FROM peelPal.goal WHERE goal_id='".$selectedGoal_id."';");
+						$stmt -> execute();
+						$t_count = null;
+						$stmt -> bind_result($t_count);
+						while($stmt->fetch())printf('',$t_count);
+						$t_count = $t_count + 1;
+						$stmt = $mysqli -> prepare("UPDATE goal SET trophy='".$t_count."', last_trophy='".$today."' WHERE goal_id='".$selectedGoal_id."';");
+						$stmt -> execute();
+					}
 				}
 			}
+		}
 	}
 
 	/*If editing a contribution: */
@@ -188,13 +222,14 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<div class="row">
 			<div class="col-lg-12 text-center">
 			<?php
-			$stmt = $mysqli -> prepare("SELECT g_name FROM goal WHERE goal_id=$selectedGoal_id;");
+			$stmt = $mysqli -> prepare("SELECT g_name, trophy FROM goal WHERE goal_id=$selectedGoal_id;");
 			$stmt->execute();
 			$top_goal_name=null;
+			$trophies = null;
 					
-			$stmt->bind_result($top_goal_name);
+			$stmt->bind_result($top_goal_name, $trophies);
 			$stmt->store_result();
-			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1>',$top_goal_name);
+			while($stmt->fetch())printf('<h1 style="color: white;" class="section-heading">%s</h1><h2>%s<i class="fa fa-trophy"></i>',$top_goal_name, $trophies);
 			
 			?>
 			</div>
