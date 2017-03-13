@@ -106,7 +106,7 @@ $username = $_POST['username'];
 			<div>
 				<h4>Please edit your account information here</h4 >
 				<form id="accountEditForm" method = "POST">
-					<table class="table table-hover" style="width: 70%;    background-color: white;">
+					<table class="table table-hover" style="background-color: white;">
 						
 						<?php
 							# Query database for user-specific achievements (using user_id, not username)
