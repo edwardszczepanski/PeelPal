@@ -120,9 +120,6 @@ $username = $_GET[username];
                     <li>
                         <a class="page-scroll" href="././goals.php">Home</a>
                     </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Dashboard</a>
-                    </li>
 					<li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
                     </li>
