@@ -17,15 +17,12 @@ or die ("Connection failed");
 
 if($_SESSION['auth']) {
 	$username = $_SESSION['username'];
-	echo $username;
         $stmt = $mysqli -> prepare("SELECT user_id FROM user WHERE username ='$username';");
         $stmt->execute();
         $user_id=null;
 	$stmt->bind_result($user_id);
 	$stmt->fetch();
 	$stmt->close();
-	echo $user_id; 
-    //header('location:login.php');
 }
 ?>
 
@@ -48,7 +45,7 @@ if (! $res) {
 		</script>';
 }
 $stmt->close();
-echo $res;
+//echo $res;
 ?>
 
 <!DOCTYPE html>
@@ -114,11 +111,8 @@ $username = $_GET[username];
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a class="page-scroll" href="#page-top"></a>
-                    </li>
                     <li>
-                        <a class="page-scroll" href="././goals.php">Home</a>
+                        <a class="page-scroll" href="goals.php">Home</a>
                     </li>
 					<li>
                         <a href="javascript:void(0)"  class="page-scroll" id="accountBtn" >Account</a>
