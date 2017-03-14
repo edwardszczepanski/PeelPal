@@ -485,7 +485,7 @@ function abandon_goal_button_cb() {
 				<table>
 					<tr>
 						<td><label>Description</label></td>
-						<td><input type="text" name="add_description" /></td>
+						<td><input type="text" name="add_description" required="required" /></td>
 					</tr>
 					<tr>
 						<td><label>Contribution Type</label></td>
@@ -517,7 +517,7 @@ function abandon_goal_button_cb() {
 				<table>
 					<tr>
 						<td><label>Description</label></td>
-						<td><input type="text" name="edit_description" id="edit_desc"/></td>
+						<td><input type="text" name="edit_description" id="edit_desc" required="required" /></td>
 					</tr>
 					<tr>
 						<td><label>Contribution Type</label></td>
