@@ -339,6 +339,14 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<a id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
+<form action="goals.php" method="POST" id="senddForm" style="margin-top: 2%;">
+<div id="createTable">
+<span></span>
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label>
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
+<label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+</div>
+</form>
         </div>
     </section>
 
