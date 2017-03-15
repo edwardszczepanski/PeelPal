@@ -177,7 +177,7 @@ $username = $_GET[username];
 						$stmt -> bind_result($goalName, $endDate, $daysToComplete, $trophies, $goal_id);	
 						$stmt -> store_result();
 						while($stmt->fetch()) {
-							printf('<tr id=%s><td>%s</td><td>%s</td><td>%s</td><td>%s</td>', $goal_id, $goalName, $endDate, $daysToComplete, $trophies);	
+							printf('<tr id=%s><td>%s</td><td>%s</td><td>%s</td><td>%s X <i class="fa fa-trophy"></i> </td>', $goal_id, $goalName, $endDate, $daysToComplete, $trophies);	
 							if ($user_id == $res) {
 								printf('<td><button class="btn btn-primary" onClick="delete_button_cb(%s)">Delete</button></td>', $goal_id);
 							}
