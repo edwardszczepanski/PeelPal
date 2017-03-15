@@ -19,6 +19,7 @@
 			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
 			while($stmt->fetch())printf('',$user_id);	
 			//if user exists, redirect to index page
+			
 			if($stmt->num_rows==1)
 			{
 				session_start();
@@ -28,7 +29,7 @@
 				header('location:goals.php');
 			}
 			else{
-				echo "<h2>Wrong username or password...</h2>";
+				echo "<script type='text/javascript'> alert('Wrong username or password...') </script>";
 			}
 		}			
     } else {
