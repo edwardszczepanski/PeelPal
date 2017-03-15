@@ -28,22 +28,10 @@ if(!$_SESSION['auth'])
 			$u_phonenum=null; 
  			$stmt->bind_result($user_id,$username,$password,$u_email,$u_phonenum);
 			while($stmt->fetch())printf('',$user_id);	
-			//if user exists, redirect to index page
-			/*
-			if($stmt->num_rows==1)
-			{
-				session_start();
-				$_SESSION['auth']='true';
-				header('location:index.php');
-			}
-			else{
-				echo "<h2>Wrong username or password...</h2>";
-			}*/
-
 		}			
 	?>
 
-<?php		
+<?php	
 	$goalTypePicked = $_POST['goalTypePicked'];			
 	$NoticeTypePicked = $_POST['NoticeTypePicked'];			
 	$goalDesccription = $_POST['goalDesccription'];			
@@ -51,23 +39,18 @@ if(!$_SESSION['auth'])
 	$tnInput = $_POST['tnInput'];			
 	$sdInput = $_POST['sdInput'];			
 
-	
-/*
-	if($goalTypePicked==null&&$NoticeTypePicked==null&&$goalDesccription==null)
-	{
-		//header("Location: goal.php");
-		//exit();
-	}	
-*/	
-	
+	//chech the goal which is going to be created
 	if((!empty($goalTypePicked))||(!empty($goalDesccription))){			
+		//make sure whether it has been already created
 		$stmt = $mysqli -> prepare("SELECT COUNT(*) FROM peelPal.goal g WHERE (g.g_name ='".$goalDesccription."') AND (g.goal_type ='".$goalTypePicked."') AND (g.notification = '".$NoticeTypePicked."');");
 		$stmt->execute();
 		$countNum=null;
 		$stmt->bind_result($countNum);		
 		while($stmt->fetch())printf('',$countNum);			
+		//if goal is ok to be created
 		if($countNum<1)
 		{			
+			//check the goal type to insert into correct table
 			if($goalTypePicked==0){
 				$stmt = $mysqli -> prepare("INSERT INTO peelPal.goal (g_name,u_id, goal_type, notification,startDate) VALUES ('".$goalDesccription."','".$user_id."','".$goalTypePicked."','".$NoticeTypePicked."',CURDATE());");
 				$stmt->execute();
@@ -96,16 +79,11 @@ if(!$_SESSION['auth'])
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-
     <title>Peel Pages</title>
-
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS -->
     <link href="css/agency.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -117,6 +95,7 @@ if(!$_SESSION['auth'])
 </head>
 
 <body id="page-top" class="index">
+<!--modal for input goal information when creating-->
 <div id="createGoalModal" class="modal" style="">
 				<!-- Modal content -->
 				<div class="modal-content">
@@ -196,13 +175,16 @@ if(!$_SESSION['auth'])
 				</div>
 			</div>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+<script>
+//share on facebook function  
+(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v2.8";
   fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+}(document, 'script', 'facebook-jssdk'));
+</script>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -247,14 +229,11 @@ if(!$_SESSION['auth'])
 		<div class="row">
 			<div class="col-lg-12 text-center">
 				<h1 style="color: white" class="section-heading">Welcome <?php echo $username;?>!</h1>
-				<!--<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">??</a></div>-->
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
         <div class="container" style=" ">
-
-<!--		<a href="#codeday" class="btn btn-primary portfolio-link" data-toggle="modal">New Goal</a> 
--->	
+	
 	<button id = "createGoalBtn" class = "btn btn-primary portfolio-link" >New Goal</button>
 		 
 	<button id="achievementBtn" class="btn btn-primary">Achievements</button>
@@ -267,16 +246,13 @@ if(!$_SESSION['auth'])
 	</form>
 	
 
-
-<!--		<button id="createGoalBtn" class="btn btn-primary portfolio-link" >New Goal</button> 
-	<a href="achievements.php" class="btn btn-primary">Achievements</a>
--->
         <P></p>
 		<div class="row">
 								    
 			<form method="POST" id="hForm">
 			<input type="text" name="selectedGoal_id" id="selectedGoal_id" style="display:none;">
 			<?php
+			//list all existing habitual goals for user
 			$stmt = $mysqli -> prepare("SELECT g.goal_id, g.g_name, g.goal_type, (CASE g.last_act WHEN '0000-00-00' THEN 'N/A' ELSE g.last_act END) AS last_act,DAYOFYEAR(g.last_act), DAYOFYEAR(g.startDate),nihao.numProg, TIMESTAMPDIFF (DAY,g.startDate,CURDATE()) AS day_diff FROM goal g LEFT JOIN (SELECT goal_id,g_name,goal_type,last_act,DAYOFYEAR(last_act), DAYOFYEAR(startDate), COUNT(*) AS numProg, TIMESTAMPDIFF (DAY,goal.startDate,CURDATE()) AS day_diff FROM goal left outer join contribution c on(goal.goal_id=c.g_id) WHERE c.evaluate='positive' AND g_state=0 AND goal_type=0 GROUP BY goal_id) AS nihao ON g.goal_id = nihao.goal_id WHERE g.g_state=0 AND g.u_id=$user_id AND g.goal_type=0;");			
 			$stmt->execute();
 			$goal_id=null;
@@ -286,7 +262,6 @@ if(!$_SESSION['auth'])
 			$last_day=null;		
 			$first_day=null;
 			$day_diff=null;	
-
 			$num_progress=null;		
 			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $last_day, $first_day,$num_progress,$day_diff);
 			$stmt->store_result();
@@ -317,15 +292,14 @@ if(!$_SESSION['auth'])
 
 			
 			<?php
+			//list all existing quantitative goals for user
 			$stmt = $mysqli -> prepare("SELECT g.goal_id,g.g_name,g.goal_type,(CASE g.last_act WHEN '0000-00-00' THEN 'N/A' ELSE g.last_act END) AS last_act, ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.g_state=0 AND g.u_id=$user_id;");
 			$stmt->execute();
 			$goal_id=null;
 			$goal_name=null;
 			$goal_type=null;		
-			$last_act=null;		
-			
+			$last_act=null;					
 			$tar_diff=null;		
-
 			$stmt->bind_result($goal_id, $goal_name, $goal_type, $last_act, $tar_diff);
 			$stmt->store_result();
 			while($stmt->fetch())printf('
@@ -382,19 +356,9 @@ if(!$_SESSION['auth'])
         }
     }
 	</script>
-    <!--footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="copyright">Copyright &copy; PeelPal 2017</span>
-                    <a href="#page-top" title="To Top" class="page-scroll" style="padding:10px">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer-->
        
 <script type="text/JavaScript"language="javascript">
+	//set up click funtion for accessing habitual goal
 	$(aclick).click(function() {
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
@@ -406,6 +370,7 @@ if(!$_SESSION['auth'])
 </script>
 
 <script type="text/JavaScript"language="javascript">	
+	//get the quantitative attributes
 	$(quantitativeLabel).click(function(){
 		if (($(gdInputDiv).css('visibility') === 'hidden')&&($(tnInputDiv).css('visibility') === 'hidden')) {
 			$(gdInputDiv).css('visibility', 'visible');
@@ -414,7 +379,7 @@ if(!$_SESSION['auth'])
 		}
 	});
 
-
+	//get the habitual attributes
 	$(habitualLable).click(function(){
 		if (($(gdInputDiv).css('visibility') === 'visible')&&($(tnInputDiv).css('visibility') === 'visible')) {
 			$(gdInputDiv).css('visibility', 'hidden');
@@ -428,6 +393,7 @@ if(!$_SESSION['auth'])
  
 </script>
 <script type="text/JavaScript"language="javascript">
+	//set up click funtion for accessing quantitative goal
 	$(bclick).click(function() {
 		var $selGoal_id=$(this).siblings().children();		
 		var $correctChild=$selGoal_id[0].value;
@@ -439,10 +405,12 @@ if(!$_SESSION['auth'])
 </script>
 
 <script type="text/JavaScript"language="javascript">
+	//set up click funtion for accessing achievement page
 	$(achievementBtn).click(function() {
 		document.getElementById("achievementForm").action="././achievements.php";
 		document.getElementById("achievementForm").submit();
 	});
+	//set up click funtion for accessing account information
 	$(accountBtn).click(function() {
 		document.getElementById("accountForm").action="././accountsInfo.php";
 		document.getElementById("accountForm").submit();
@@ -451,17 +419,11 @@ if(!$_SESSION['auth'])
 </script>
 
     <script src="js/jquery.js"></script>
-
     <script src="js/bootstrap.min.js"></script>
-
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="js/classie.js"></script>
     <script src="js/cbpAnimatedHeader.js"></script>
-
-
     <script src="js/agency.js"></script>
-
     <script type="text/javascript" src="js/script.js"></script>
 </body>
-
 </html>

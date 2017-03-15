@@ -7,6 +7,7 @@
 	if (isset($_POST['login'])) {
 		$username=$_POST['username'];
 		$password=$_POST['password'];
+		//check input user information is valid
 		if(isset($username) && isset($password) && !empty($username) && !empty($password))
 		{
 			$stmt = $mysqli -> prepare("SELECT * FROM user WHERE username ='$username' AND password = '$password';");
@@ -37,10 +38,11 @@
 		$password=$_POST['create_password'];
 		$email=$_POST['create_email'];
 		$number=$_POST['create_number'];
-
+		//check the user information is valid when creating
 		if(isset($username) && isset($password) && !empty($username) && !empty($password) && isset($email) && isset($number) && !empty($email) && !empty($number)){
 			$sql = "INSERT INTO user (username, password, email, phone_num) VALUES ('{$username}','{$password}','{$email}','{$number}');";
 			header("location:{$sql}");
+			// after successfull create the user, process redirection
 			if ($mysqli->query($sql) === TRUE){
 				header('location:goals.php');
 			} else {
@@ -124,7 +126,6 @@
 		<div class="row">
 			<div class="col-lg-12 text-center">
 				<h1 style="color: white" class="section-heading">Welcome <?php echo $username;?>!</h1>
-				<!--<div class="fb-share-button" data-href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="http://ix.cs.uoregon.edu/~wang18/p2/PeelPal/goals.php">??</a></div>-->
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
@@ -205,20 +206,14 @@
 				</div>
 			</div>
 		</div>
-
     </section>
 			
     <script src="js/jquery.js"></script>
-
     <script src="js/bootstrap.min.js"></script>
-
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="js/classie.js"></script>
     <script src="js/cbpAnimatedHeader.js"></script>
-
-
     <script src="js/agency.js"></script>
-
     <script type="text/javascript" src="js/script.js"></script>
 </body>
 
