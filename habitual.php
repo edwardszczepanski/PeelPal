@@ -10,7 +10,7 @@ if(!$_SESSION['auth'])
 
 <?php
 	//start page load timer
-	$start_time = microtime(true);
+	//$start_time = microtime(true);
 ?>
 
 
@@ -57,8 +57,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 <?php
 	/*If adding contribution: */
-	//timer
-	$start_run = microtime(true);
+	//timer start
+	//$start_run = microtime(true);
 	$today = date("Y-m-d");
 	$description = $_POST['add_description'];
 	$type = $_POST['add_c_type'];
@@ -126,11 +126,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				}
 			}
 		}
-		$end_run = microtime(true);
-		$running_time = ($end_run - $start_run)*1000;
-		echo "adding took ";
-		echo $running_time;
-		echo "ms";
+		//end adding contribution running time
+		//$end_run = microtime(true);
+		//$running_time = ($end_run - $start_run)*1000;
+		//echo "adding took ";
+		//echo $running_time;
+		//echo "ms";
 	}
 
 	/*If editing a contribution: */
@@ -648,11 +649,11 @@ function abandon_goal_button_cb() {
 
 <?php
 	//end page load timer
-	$end_time = microtime(true);
-	$load_time = ($end_time - $start_time)*1000;
-	echo "loading page took ";
-	echo $load_time;
-	echo "ms";
+	//$end_time = microtime(true);
+	//$load_time = ($end_time - $start_time)*1000;
+	//echo "loading page took ";
+	//echo $load_time;
+	//echo "ms";
 ?>
 
 </html>
