@@ -1,6 +1,6 @@
 # PeelPal
 
-accountsInfo.php:		Account information page  		                                  
+accountsInfo.php:		Account information page  		                                
 accountEditHelper.php: 	File includes account editing funtion  
 achievements.php:    	Achievements page  
 connectionData.txt:		Database connection data  
@@ -17,8 +17,8 @@ less/:					Switching scaffolding and UI files
 logout.php:				Logout function file  
 login.php:				login page with function  
 quantitative.php:		Habitual goal page with funtions needed  
-robots.txt:  
-twilio-php-master/:  
+robots.txt:   
+twilio-php-master/:			  
 README.md: 				Files description  
-sitemap.xml:  
-twilio-test.php:  
+sitemap.xml:  				site map  
+twilio-test.php:  			php file for testing twilio  

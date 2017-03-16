@@ -132,6 +132,11 @@ body {
     color:#333;    
 }
 
+#createTable .newButtonColor {
+    background-color:#FFFFFF;
+    color:#333;    
+}
+
 .createGoal{
 	margin-left: auto;
     margin-right: auto;
