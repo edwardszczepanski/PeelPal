@@ -339,14 +339,17 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<a id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
-<form action="goals.php" method="POST" id="senddForm" style="margin-top: 2%;">
+
 <div id="createTable">
 <span></span>
 <label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label>
 <label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
 <label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+<?php
+    echo '<label class=newButtonColor"><input type="submit" id="' . $selectedGoal_id . '" value="Change"><span>Submit</span></label>';
+?>
 </div>
-</form>
+
         </div>
     </section>
 
@@ -479,6 +482,28 @@ function abandon_goal_button_cb() {
 
     <script type="text/javascript" src="js/script.js"></script>
 
+	<script>
+	$('#datSubmitButton').click(function()
+	{
+		alert("what the fuck is going on");
+		 $.post( "updatePreferences.php", { name: "arst", thing: "oien" }, function(data) {
+		  alert( "success" );
+		  alert( data );
+		})
+		  .done(function() {
+			alert( "second success" );
+		  })
+		  .fail(function() {
+			alert( "error" );
+		  })
+		  .always(function() {
+			alert( "finished" );
+		  });
+		 
+		// Perform other work here ...
+		 
+	});
+	</script>
 
 
 	<!-- Add Contribution Modal -->
