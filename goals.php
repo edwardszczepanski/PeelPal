@@ -13,6 +13,9 @@ if(!$_SESSION['auth'])
  or die('Error connecting');
  ?>
 <?php
+		//timer: pageload start
+		$time_start = microtime(true);
+
 		$username=$_SESSION['username'];
 		$password=$_SESSION['password'];
 		
@@ -464,4 +467,12 @@ if(!$_SESSION['auth'])
     <script type="text/javascript" src="js/script.js"></script>
 </body>
 
+	<?php
+		//pageload timer stop
+		$time_end = microtime(true);
+		$runtime = ($time_end - $time_start)*1000;
+		echo "load time is ";
+		echo $runtime;
+		echo "ms";
+	?>
 </html>
