@@ -406,6 +406,14 @@ while($stmt->fetch())printf('', $acc_username);
 		<button id="myBtn" type="button" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD UPDATE</button>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
+<div id="createTable" style="padding-top: 16px;">
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label>
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
+<label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+<?php
+    echo '<label class=newButtonColor"><input type="submit" value="' . $selectedGoal_id . '" id="datSubmitButton"><span>Submit</span></label>';
+?>
+</div>
         </div>
     </section>
 
@@ -464,6 +472,7 @@ while($stmt->fetch())printf('', $acc_username);
 		</form>
         </div>
 </div>
+
 
 <script type="text/JavaScript"language="javascript">
 	//validate the information input in add new update modal by user
@@ -566,6 +575,27 @@ function abandon_goal_button_cb() {
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="js/classie.js"></script>
     <script src="js/cbpAnimatedHeader.js"></script>
+	<script>
+		value = null;
+		$("input:radio[name=NoticeTypePicked]").click(function() {
+				value = $(this).val();
+		});
+		var goalID = $('#datSubmitButton').val()
+		$('#datSubmitButton').click(function()
+		{
+			//alert("what the world is going on");
+			if(value == null){
+			  alert("Please Select an option");
+				return;
+			}
+			 $.post( "updatePreferences.php", { identification: goalID, selected: value }, function(data) {
+			  alert("Preferences Updated");
+			})
+			  .fail(function() {
+				alert( "Error Updating Preferences" );
+			  });
+		});
+	</script>
 	<script type="text/JavaScript"language="javascript">
 	$(function(){
     // When the user clicks the button, open the modal

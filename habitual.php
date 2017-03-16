@@ -339,6 +339,16 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 		<a id="addModalBtn" class="btn btn-primary portfolio-link" onclick="pop_Add()" >ADD CONTRIBUTION</a>
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
+
+<div id="createTable" style="padding-top: 16px;">
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label>
+<label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
+<label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
+<?php
+    echo '<label class=newButtonColor"><input type="submit" value="' . $selectedGoal_id . '" id="datSubmitButton"><span>Submit</span></label>';
+?>
+</div>
+
         </div>
     </section>
 
@@ -471,6 +481,27 @@ function abandon_goal_button_cb() {
 
     <script type="text/javascript" src="js/script.js"></script>
 
+	<script>
+    value = null;
+    $("input:radio[name=NoticeTypePicked]").click(function() {
+            value = $(this).val();
+    });
+    var goalID = $('#datSubmitButton').val()
+	$('#datSubmitButton').click(function()
+	{
+		//alert("what the world is going on");
+        if(value == null){
+		  alert("Please Select an option");
+            return;
+        }
+		 $.post( "updatePreferences.php", { identification: goalID, selected: value }, function(data) {
+		  alert("Preferences Updated");
+		})
+		  .fail(function() {
+			alert( "Error Updating Preferences" );
+		  });
+	});
+	</script>
 
 
 	<!-- Add Contribution Modal -->
