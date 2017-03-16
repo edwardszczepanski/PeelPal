@@ -340,8 +340,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
         <a class="btn btn-primary" onClick="complete_goal_button_cb()">MARK AS COMPLETE</a>
         <a class="btn btn-primary" onClick="abandon_goal_button_cb()">ABANDON GOAL</a>
 
-<div id="createTable">
-<span></span>
+<div id="createTable" style="padding-top: 16px;">
 <label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Email"><span>Email</span></label>
 <label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
 <label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
@@ -492,13 +491,14 @@ function abandon_goal_button_cb() {
 	{
 		//alert("what the world is going on");
         if(value == null){
+		  alert("Please Select an option");
             return;
         }
 		 $.post( "updatePreferences.php", { identification: goalID, selected: value }, function(data) {
-		  alert( data );
+		  alert("Preferences Updated");
 		})
 		  .fail(function() {
-			alert( "error" );
+			alert( "Error Updating Preferences" );
 		  });
 	});
 	</script>
