@@ -4,10 +4,13 @@
  or die('Error connecting');
  ?>
 <?php
-//echo "arsoteinarst";
 $goalID = $_POST['identification'];
 $selected = $_POST['selected'];
-echo $goalID . " " . $selected;
+//echo "UPDATE goal SET notification = '$selected' WHERE goal_id = $goalID;";
+
+$stmt = $mysqli -> prepare("UPDATE goal SET notification = '$selected' WHERE goal_id = '$goalID';");
+$stmt -> execute(); 
+
 /*
 $username = $_POST['username'];
 $password = $_POST['password'];

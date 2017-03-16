@@ -494,22 +494,12 @@ function abandon_goal_button_cb() {
         if(value == null){
             return;
         }
-        
 		 $.post( "updatePreferences.php", { identification: goalID, selected: value }, function(data) {
 		  alert( data );
 		})
-		  .done(function() {
-			//alert( "second success" );
-		  })
 		  .fail(function() {
 			alert( "error" );
-		  })
-		  .always(function() {
-			//alert( "finished" );
 		  });
-		 
-		// Perform other work here ...
-		 
 	});
 	</script>
 
