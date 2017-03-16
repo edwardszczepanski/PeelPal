@@ -5,10 +5,9 @@
  ?>
 <?php
 //echo "arsoteinarst";
-$name = $_POST['name'];
-$thing = $_POST['thing'];
-echo $name;
-echo $thing;
+$goalID = $_POST['identification'];
+$selected = $_POST['selected'];
+echo $goalID . " " . $selected;
 /*
 $username = $_POST['username'];
 $password = $_POST['password'];

@@ -490,13 +490,12 @@ function abandon_goal_button_cb() {
     var goalID = $('#datSubmitButton').val()
 	$('#datSubmitButton').click(function()
 	{
-		alert("what the fuck is going on");
-        alert(value)
+		//alert("what the world is going on");
         if(value == null){
             return;
         }
         
-		 $.post( "updatePreferences.php", { goalID: goalID, selected: value }, function(data) {
+		 $.post( "updatePreferences.php", { identification: goalID, selected: value }, function(data) {
 		  alert( data );
 		})
 		  .done(function() {
