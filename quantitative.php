@@ -390,7 +390,7 @@ while($stmt->fetch())printf('', $acc_username);
 					$stmt->store_result();
 					while($stmt->fetch())printf('
 					<tr>
-					<td><p>%s</p></td>
+					<td><p class="targetDate">%s</p></td>
 					<td><p>%s</p></td>
 					<td><input class="myTarget" style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 						<input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
@@ -648,15 +648,24 @@ function abandon_goal_button_cb() {
 	</script>
 
     <script type="text/javascript">
+		var goal = $("h4").html().split('/')[1];
+		var data = [];
+		var dates = [];
 		$("#getDate tr").each(function () {
-
 			$('td', this).each(function () {
+				$('p', this).each(function () {
+					if($(this).attr("class") == "targetDate"){
+						console.log($(this).html());
+					}
+				});
 				$('input', this).each(function () {
-					console.log(this);
+					if($(this).attr("class") == "myTarget"){
+						data.push($(this).val());
+					}
 				});
 			 });
-
 		});
+		console.log(data);
     </script>
 	
 	<script type="text/JavaScript"language="javascript">
