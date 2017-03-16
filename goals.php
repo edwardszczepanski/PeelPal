@@ -129,6 +129,7 @@ if(!$_SESSION['auth'])
 						<table class="createGoal">
 							<tr>
 								<td>
+									<!-- New goal types would require adding option here -->
 									<p>Is your new goal habitual or quantitative?</p>
 								</td>
 							</tr>
@@ -407,7 +408,7 @@ if(!$_SESSION['auth'])
 	});
 	
 </script>
-
+<!-- New goal types would require addition here -->
 <script type="text/JavaScript"language="javascript">	
 	$(quantitativeLabel).click(function(){
 		if (($(gdInputDiv).css('visibility') === 'hidden')&&($(tnInputDiv).css('visibility') === 'hidden')) {
