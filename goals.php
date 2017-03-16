@@ -14,7 +14,7 @@ if(!$_SESSION['auth'])
  ?>
 <?php
 		//timer: pageload start
-		$time_start = microtime(true);
+		//$time_start = microtime(true);
 
 		$username=$_SESSION['username'];
 		$password=$_SESSION['password'];
@@ -469,10 +469,10 @@ if(!$_SESSION['auth'])
 
 	<?php
 		//pageload timer stop
-		$time_end = microtime(true);
-		$runtime = ($time_end - $time_start)*1000;
-		echo "load time is ";
-		echo $runtime;
-		echo "ms";
+		//$time_end = microtime(true);
+		//$runtime = ($time_end - $time_start)*1000;
+		//echo "load time is ";
+		//echo $runtime;
+		//echo "ms";
 	?>
 </html>
