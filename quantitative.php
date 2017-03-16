@@ -136,7 +136,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 			$edit_ls=null;
 			$stmt->bind_result($edit_ls);				
 			while($stmt->fetch())printf('',$edit_ls);			
-			echo"<script>alert(wusuowei);</script>";		
+			//echo"<script>alert(wusuowei);</script>";		
 			
 			//check the update update's date is the last update's date or not
 			if($edit_date == $edit_ls)
@@ -346,6 +346,16 @@ while($stmt->fetch())printf('', $acc_username);
         <div class="container" style=" ">		
 		<!--Load the progress bar-->
 		<div class="row">								    
+    <div class="container">
+
+        <div class="jumbotron">
+
+            <svg id="visualisation" width="1000" height="500"></svg>
+            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        </div>
+
+    </div>
+
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
 			$stmt = $mysqli -> prepare("SELECT ABS(t.l_value - t.s_value)/ABS(t.t_value - t.s_value) diff FROM goal g JOIN target t ON g.goal_id = t.goal_id WHERE g.goal_id = $selectedGoal_id");
@@ -649,8 +659,8 @@ function abandon_goal_button_cb() {
 
     <script type="text/javascript">
 		var goal = $("h4").html().split('/')[1];
-		var data = [];
 		var dates = [];
+		var vals = [];
 		$("#getDate tr").each(function () {
 			$('td', this).each(function () {
 				$('p', this).each(function () {
@@ -660,18 +670,79 @@ function abandon_goal_button_cb() {
 				});
 				$('input', this).each(function () {
 					if($(this).attr("class") == "myTarget"){
-						data.push($(this).val());
+						vals.push(parseInt($(this).val()));
 					}
 				});
 			 });
 		});
-		console.log(goal);
-		output = []
-		for(var i = 0; i < data.length; ++i){
-			var myObject = { "date":dates[i], "data":data[i]}
-			output.push(myObject);
+		datesMin = Math.min.apply(null, dates);
+		datesMax = Math.max.apply(null, dates);
+		valsMin = Math.min.apply(null, vals);
+		valsMax = Math.max.apply(null, vals);
+		var data = []
+		for(var i = 0; i < vals.length; ++i){
+			var myObject = { "date":dates[i] - datesMin, "data":vals[i]}
+			data.push(myObject);
 		}
-		console.log(output);
+		//console.log(dates);
+		//console.log(vals);
+		console.log(goal);
+		console.log(data);
+
+
+	function InitChart() {
+                    var vis = d3.select("#visualisation"),
+                        WIDTH = 1000,
+                        HEIGHT = 500,
+                        MARGINS = {
+                            top: 20,
+                            right: 20,
+                            bottom: 20,
+                            left: 50
+                        },
+
+                        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, datesMax - datesMin]),
+
+                        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([valsMin, Math.max(goal, valsMax)]),
+
+                        xAxis = d3.svg.axis()
+                        .scale(xScale),
+
+                        yAxis = d3.svg.axis()
+                        .scale(yScale)
+                        .orient("left");
+
+
+
+                    vis.append("svg:g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+                        .call(xAxis);
+
+                    vis.append("svg:g")
+                        .attr("class", "y axis")
+                        .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+                        .call(yAxis);
+
+                    var lineGen = d3.svg.line()
+                        .x(function(d) {
+                            return xScale(d.date);
+                        })
+                        .y(function(d) {
+                            return yScale(d.data);
+                        })
+                        .interpolate("basis");
+
+                    vis.append('svg:path')
+                        .attr('d', lineGen(data))
+                        .attr('stroke', 'green')
+                        .attr('stroke-width', 2)
+                        .attr('fill', 'none');
+
+                }
+				if(vals.length > 0){
+                	InitChart();
+				}
     </script>
 	
 	<script type="text/JavaScript"language="javascript">
