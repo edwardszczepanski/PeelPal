@@ -348,9 +348,10 @@ while($stmt->fetch())printf('', $acc_username);
 		<div class="row">								    
     <div class="container">
 
-        <div class="jumbotron">
+        <div class="jumbotron" style="padding: 15px, 0% !important;">
 
-            <svg id="visualisation" width="1000" height="500"></svg>
+        <!--div class="jumbotron" style="padding-right: 0px !important; padding-left: 0px !important;-->
+            <svg id="visualisation" width="100%" height="500"></svg>
             <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
         </div>
 
@@ -665,7 +666,7 @@ function abandon_goal_button_cb() {
 			$('td', this).each(function () {
 				$('p', this).each(function () {
 					if($(this).attr("class") == "targetDate"){
-						dates.push(Date.parse($(this).html()));
+						dates.push(Date.parse($(this).html()) / 10000);
 					}
 				});
 				$('input', this).each(function () {
@@ -686,8 +687,8 @@ function abandon_goal_button_cb() {
 		}
 		//console.log(dates);
 		//console.log(vals);
-		console.log(goal);
-		console.log(data);
+		//console.log(goal);
+		//console.log(data);
 
 
 	function InitChart() {
@@ -742,6 +743,8 @@ function abandon_goal_button_cb() {
                 }
 				if(vals.length > 0){
                 	InitChart();
+				}else{
+					$(".jumbotron").remove();
 				}
     </script>
 	
