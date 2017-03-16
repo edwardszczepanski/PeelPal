@@ -346,7 +346,7 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 <label class="newButtonColor"><input type="radio" name="NoticeTypePicked" value="Text"><span>Text</span></label>
 <label class=newButtonColor"><input type="radio" name="NoticeTypePicked" value="None"><span>None</span></label>
 <?php
-    echo '<label class=newButtonColor"><input type="submit" id="' . $selectedGoal_id . '" value="Change"><span>Submit</span></label>';
+    echo '<label class=newButtonColor"><input type="submit" value="' . $selectedGoal_id . '" id="datSubmitButton"><span>Submit</span></label>';
 ?>
 </div>
 
@@ -483,21 +483,30 @@ function abandon_goal_button_cb() {
     <script type="text/javascript" src="js/script.js"></script>
 
 	<script>
+    value = null;
+    $("input:radio[name=NoticeTypePicked]").click(function() {
+            value = $(this).val();
+    });
+    var goalID = $('#datSubmitButton').val()
 	$('#datSubmitButton').click(function()
 	{
 		alert("what the fuck is going on");
-		 $.post( "updatePreferences.php", { name: "arst", thing: "oien" }, function(data) {
-		  alert( "success" );
+        alert(value)
+        if(value == null){
+            return;
+        }
+        
+		 $.post( "updatePreferences.php", { goalID: goalID, selected: value }, function(data) {
 		  alert( data );
 		})
 		  .done(function() {
-			alert( "second success" );
+			//alert( "second success" );
 		  })
 		  .fail(function() {
 			alert( "error" );
 		  })
 		  .always(function() {
-			alert( "finished" );
+			//alert( "finished" );
 		  });
 		 
 		// Perform other work here ...
