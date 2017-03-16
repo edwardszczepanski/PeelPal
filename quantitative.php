@@ -655,7 +655,7 @@ function abandon_goal_button_cb() {
 			$('td', this).each(function () {
 				$('p', this).each(function () {
 					if($(this).attr("class") == "targetDate"){
-						console.log($(this).html());
+						dates.push(Date.parse($(this).html()));
 					}
 				});
 				$('input', this).each(function () {
@@ -665,7 +665,13 @@ function abandon_goal_button_cb() {
 				});
 			 });
 		});
-		console.log(data);
+		console.log(goal);
+		output = []
+		for(var i = 0; i < data.length; ++i){
+			var myObject = { "date":dates[i], "data":data[i]}
+			output.push(myObject);
+		}
+		console.log(output);
     </script>
 	
 	<script type="text/JavaScript"language="javascript">
