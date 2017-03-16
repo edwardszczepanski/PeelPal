@@ -32,7 +32,10 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=320, height=device-height">
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
 
     <title>Peel Pages</title>
 
@@ -354,19 +357,63 @@ while($stmt->fetch())printf('', $acc_username);
 			</div>
 		</div>
 		<hr style="border-top: 2px solid #fff;">        
-        <div class="container" style=" ">		
+        <div class="container" style=" ">
+        <div style="width: 100%;">
+    <canvas id="myChart" style="width:600px; height:200px;"     ></canvas>
+ </div>
+
+
+
+<?php
+$stmt = $mysqli -> prepare("SELECT u.evaluate_num, u.date FROM updateprog u WHERE goal_id = $selectedGoal_id ORDER BY u.date ;");
+$stmt->execute();
+$g_num=null;
+$g_date=null;
+$a=array();
+$b=array();
+$stmt->bind_result($g_num,$g_date);
+$stmt->store_result();
+while($stmt->fetch()){
+	array_push($a,$g_num);
+	array_push($b,$g_date);
+
+}
+?>
+<script type="text/javascript">
+ 
+var labels=['<?php echo implode("','",$b);?>'];
+var data=['<?php echo implode("','",$a);?>'];
+ 
+
+ 
+ var data = {
+    labels,
+    datasets: [
+        {	
+        	
+            data,
+            
+        }]
+};
+
+
+    // Get the context of the canvas element we want to select
+        var ctx = document.getElementById("myChart");
+        var myBarChart = new Chart(ctx, {
+                                            type: 'line',
+                                            data: data,
+                                            options: {
+        scales: {
+            label: [{
+                display: false
+            }]
+        }
+    }
+                                    });
+</script>		
 		<!--Load the progress bar-->
 		<div class="row">								    
-    <div class="container">
-
-        <div class="jumbotron" style="padding: 15px, 0% !important;">
-
-        <!--div class="jumbotron" style="padding-right: 0px !important; padding-left: 0px !important;-->
-            <svg id="visualisation" width="100%" height="500"></svg>
-            <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        </div>
-
-    </div>
+    
 
 			<?php
 			$selectedGoal_id=$_POST['selectedGoal_id'];
@@ -412,9 +459,9 @@ while($stmt->fetch())printf('', $acc_username);
 					$stmt->store_result();
 					while($stmt->fetch())printf('
 					<tr>
-					<td><p class="targetDate">%s</p></td>
 					<td><p>%s</p></td>
-					<td><input class="myTarget" style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
+					<td><p>%s</p></td>
+					<td><input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 						<input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 					<button id="edit_contact" type="button" class="btn btn-info" onclick="pop_Edit()">Edit</button></td>
 					
@@ -669,95 +716,7 @@ function abandon_goal_button_cb() {
 	}
 	</script>
 
-    <script type="text/javascript">
-		var goal = $("h4").html().split('/')[1];
-		var dates = [];
-		var vals = [];
-		$("#getDate tr").each(function () {
-			$('td', this).each(function () {
-				$('p', this).each(function () {
-					if($(this).attr("class") == "targetDate"){
-						dates.push(Date.parse($(this).html()) / 10000);
-					}
-				});
-				$('input', this).each(function () {
-					if($(this).attr("class") == "myTarget"){
-						vals.push(parseInt($(this).val()));
-					}
-				});
-			 });
-		});
-		datesMin = Math.min.apply(null, dates);
-		datesMax = Math.max.apply(null, dates);
-		valsMin = Math.min.apply(null, vals);
-		valsMax = Math.max.apply(null, vals);
-		var data = []
-		for(var i = 0; i < vals.length; ++i){
-			var myObject = { "date":dates[i] - datesMin, "data":vals[i]}
-			data.push(myObject);
-		}
-		//console.log(dates);
-		//console.log(vals);
-		//console.log(goal);
-		//console.log(data);
 
-
-	function InitChart() {
-                    var vis = d3.select("#visualisation"),
-                        WIDTH = 1000,
-                        HEIGHT = 500,
-                        MARGINS = {
-                            top: 20,
-                            right: 20,
-                            bottom: 20,
-                            left: 50
-                        },
-
-                        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, datesMax - datesMin]),
-
-                        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([valsMin, Math.max(goal, valsMax)]),
-
-                        xAxis = d3.svg.axis()
-                        .scale(xScale),
-
-                        yAxis = d3.svg.axis()
-                        .scale(yScale)
-                        .orient("left");
-
-
-
-                    vis.append("svg:g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-                        .call(xAxis);
-
-                    vis.append("svg:g")
-                        .attr("class", "y axis")
-                        .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-                        .call(yAxis);
-
-                    var lineGen = d3.svg.line()
-                        .x(function(d) {
-                            return xScale(d.date);
-                        })
-                        .y(function(d) {
-                            return yScale(d.data);
-                        })
-                        .interpolate("basis");
-
-                    vis.append('svg:path')
-                        .attr('d', lineGen(data))
-                        .attr('stroke', 'green')
-                        .attr('stroke-width', 2)
-                        .attr('fill', 'none');
-
-                }
-				if(vals.length > 0){
-                	InitChart();
-				}else{
-					$(".jumbotron").remove();
-				}
-    </script>
 	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
