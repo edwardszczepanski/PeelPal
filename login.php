@@ -180,19 +180,19 @@
 							  <form id="tab" method="POST" style="margin-left:18px; margin-bottom:20px;">
 								<label>Username</label>
                                 <br>
-								<input name="create_username" type="text" class="input-xlarge">
+								<input name="create_username" type="text" class="input-xlarge" required>
                                 <br>
 								<label>Password</label>
                                 <br>
-								<input name="create_password" type="password" class="input-xlarge">
+								<input name="create_password" type="password" class="input-xlarge" required>
                                 <br>
 								<label>Email</label>
                                 <br>
-								<input name="create_email" type="email" class="input-xlarge">
+								<input name="create_email" type="email" class="input-xlarge" required>
                                 <br>
 								<label>Phone Number</label>
                                 <br>
-								<input name="create_number" type="tel" class="input-xlarge">
+								<input name="create_number" type="tel" class="input-xlarge" required>
                                 <br>
 			                    <br> 
 								<div>

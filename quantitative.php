@@ -8,6 +8,9 @@ if(!$_SESSION['auth'])
 }
 ?>
 <?php 
+	//start page load timer
+	//$start_time = microtime(true);
+
  include('./connectionData.txt');
  $mysqli = new mysqli($server, $user, $pass, $dbname, $port)
  or die('Error connecting');
@@ -54,6 +57,8 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 
 <!--add update-->
 <?php		
+	//start update timer
+	//$start_run = microtime(true);
 	//get the info. that the user filled
 	$add_date = $_POST['add_date'];			
 	$add_des = $_POST['add_des'];			
@@ -106,6 +111,12 @@ $selectedGoal_id=$_POST['selectedGoal_id'];
 				}
 			}
 		}
+		//end update timer
+		/*$end_run = microtime(true);
+		$running_time = ($end_run - $start_run)*1000;
+		echo "adding update took ";
+		echo $running_time;
+		echo "ms \n";*/
 	}	
 ?> 
 
@@ -782,5 +793,14 @@ function abandon_goal_button_cb() {
 
     <script type="text/javascript" src="js/script.js"></script>
 </body>
+
+<?php
+	//end page load timer
+	/*$end_time = microtime(true);
+	$load_time = ($end_time - $start_time)*1000;
+	echo "loading page took ";
+	echo $load_time;
+	echo "ms";*/
+?>
 
 </html>

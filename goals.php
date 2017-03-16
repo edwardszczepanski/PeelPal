@@ -13,6 +13,9 @@ if(!$_SESSION['auth'])
  or die('Error connecting');
  ?>
 <?php
+		//timer: pageload start
+		//$time_start = microtime(true);
+
 		$username=$_SESSION['username'];
 		$password=$_SESSION['password'];
 		
@@ -105,6 +108,7 @@ if(!$_SESSION['auth'])
 						<table class="createGoal">
 							<tr>
 								<td>
+									<!-- New goal types would require adding option here -->
 									<p>Is your new goal habitual or quantitative?</p>
 								</td>
 							</tr>
@@ -368,7 +372,7 @@ if(!$_SESSION['auth'])
 	});
 	
 </script>
-
+<!-- New goal types would require addition here -->
 <script type="text/JavaScript"language="javascript">	
 	//get the quantitative attributes
 	$(quantitativeLabel).click(function(){
@@ -426,4 +430,13 @@ if(!$_SESSION['auth'])
     <script src="js/agency.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
 </body>
+
+	<?php
+		//pageload timer stop
+		//$time_end = microtime(true);
+		//$runtime = ($time_end - $time_start)*1000;
+		//echo "load time is ";
+		//echo $runtime;
+		//echo "ms";
+	?>
 </html>
