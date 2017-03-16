@@ -392,7 +392,7 @@ while($stmt->fetch())printf('', $acc_username);
 					<tr>
 					<td><p>%s</p></td>
 					<td><p>%s</p></td>
-					<td><input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
+					<td><input class="myTarget" style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 						<input style="display: none;" type="text" name="%s" style="width:50px;" value="%s" >
 					<button id="edit_contact" type="button" class="btn btn-info" onclick="pop_Edit()">Edit</button></td>
 					
@@ -646,6 +646,18 @@ function abandon_goal_button_cb() {
     }
 	}
 	</script>
+
+    <script type="text/javascript">
+		$("#getDate tr").each(function () {
+
+			$('td', this).each(function () {
+				$('input', this).each(function () {
+					console.log(this);
+				});
+			 });
+
+		});
+    </script>
 	
 	<script type="text/JavaScript"language="javascript">
 	function pop_Edit() {
